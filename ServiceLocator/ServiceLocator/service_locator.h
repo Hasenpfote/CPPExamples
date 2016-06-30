@@ -26,7 +26,7 @@ public:
     ~ServiceLocator() = delete;
 
     template<typename T>
-    static void Provide(const std::shared_ptr<T>& object)
+    static void RegisterService(const std::shared_ptr<T>& object)
     {
 #ifndef ENABLE_TYPE_TEST
         static_assert(std::is_base_of<IService, T>::value == true, "T must be derived from IService.");
@@ -35,18 +35,19 @@ public:
     }
 
     template<typename T>
-    static T* GetService()
+    static void UnregisterService()
     {
-        auto ptr = map[typeid(T).name()];
-        assert(ptr && "Unbale to find a service.");
-        return std::static_pointer_cast<T>(ptr).get();
+        auto& it = map.find(typeid(T).name());
+        if(it != map.end()){
+            map.erase(it);
+        }
     }
 
     template<typename T>
-    static T& GetService2()
+    static std::weak_ptr<T> GetService()
     {
         auto ptr = map[typeid(T).name()];
         assert(ptr && "Unbale to find a service.");
-        return *std::static_pointer_cast<T>(ptr);
+        return std::dynamic_pointer_cast<T>(ptr);
     }
 };

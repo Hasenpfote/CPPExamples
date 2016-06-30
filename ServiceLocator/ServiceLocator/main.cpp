@@ -7,43 +7,48 @@
 
 void main()
 {
-    ILogService* log_service = nullptr;
+    std::weak_ptr<ILogService> log_service;
     // console
     {
         auto clog = std::unique_ptr<ConsoleLogService>(new ConsoleLogService());
-        ServiceLocator::Provide<ILogService>(std::move(clog));
+        ServiceLocator::RegisterService<ILogService>(std::move(clog));
     }
     log_service = ServiceLocator::GetService<ILogService>();
-    if(log_service){
-        log_service->Write("aaaaaa");
+    if(auto sp = log_service.lock()){
+        sp->Write("aaaaaa");
     }
-
-    auto& log_service2 = ServiceLocator::GetService2<ILogService>();
-    log_service2.Write("bbbbbbb");
-
     // file
     {
         auto flog = std::unique_ptr<FileLogService>(new FileLogService("log.txt"));
-        ServiceLocator::Provide<ILogService>(std::move(flog));
+        ServiceLocator::RegisterService<ILogService>(std::move(flog));
     }
     log_service = ServiceLocator::GetService<ILogService>();
-    if(log_service){
-        log_service->Write("aaaaaa");
+    if(auto sp = log_service.lock()){
+        sp->Write("aaaaaa");
     }
     // audio
     {
-        auto audio = std::unique_ptr<NullAudioService>(new NullAudioService());
-        ServiceLocator::Provide<IAudioService>(std::move(audio));
+        //auto audio = std::unique_ptr<NullAudioService>(new NullAudioService());
+        //ServiceLocator::RegisterService<IAudioService>(std::move(audio));
+        auto audio = std::make_shared<NullAudioService>();
+        ServiceLocator::RegisterService<IAudioService>(audio);
     }
     auto audio_service = ServiceLocator::GetService<IAudioService>();
-    audio_service->Play("aaaaaa");
+#if 1
+    ServiceLocator::UnregisterService<IAudioService>();
+#endif
+    if(auto sp = audio_service.lock()){
+        sp->Play("aaaaaa");
+    }
     //
 #ifdef ENABLE_TYPE_TEST
     {
         auto unknown = std::unique_ptr<IUnknownService>(new IUnknownService());
-        ServiceLocator::Provide<IUnknownService>(std::move(unknown));
+        ServiceLocator::RegisterService<IUnknownService>(std::move(unknown));
     }
     auto unknown_service = ServiceLocator::GetService<IUnknownService>();
-    unknown_service->DoSomething();
+    if(auto sp = unknown_service.lock()){
+        sp->DoSomething();
+    }
 #endif
 }
