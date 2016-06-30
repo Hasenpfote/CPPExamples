@@ -3,17 +3,7 @@
 #include "console_log_service.h"
 #include "file_log_service.h"
 #include "null_audio_service.h"
-
-class IUnknownService
-{
-public:
-    IUnknownService() = default;
-    virtual ~IUnknownService() = default;
-    virtual void DoSomething()
-    {
-        std::cout << __func__ << std::endl;
-    }
-};
+#include "unknown_service.h"
 
 void main()
 {
@@ -27,6 +17,10 @@ void main()
     if(log_service){
         log_service->Write("aaaaaa");
     }
+
+    auto& log_service2 = ServiceLocator::GetService2<ILogService>();
+    log_service2.Write("bbbbbbb");
+
     // file
     {
         auto flog = std::unique_ptr<FileLogService>(new FileLogService("log.txt"));

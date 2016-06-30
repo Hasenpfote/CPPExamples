@@ -38,4 +38,12 @@ public:
         assert(ptr && "Unbale to find a service.");
         return std::static_pointer_cast<T>(ptr).get();
     }
+
+    template<typename T>
+    static T& GetService2()
+    {
+        auto ptr = map[typeid(T).name()];
+        assert(ptr && "Unbale to find a service.");
+        return *std::static_pointer_cast<T>(ptr);
+    }
 };
