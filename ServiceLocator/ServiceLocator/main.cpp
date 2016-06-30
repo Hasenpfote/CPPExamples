@@ -10,7 +10,7 @@ void main()
     std::weak_ptr<ILogService> log_service;
     // console
     {
-        auto clog = std::unique_ptr<ConsoleLogService>(new ConsoleLogService());
+        auto clog = std::make_unique<ConsoleLogService>();
         ServiceLocator::RegisterService<ILogService>(std::move(clog));
     }
     log_service = ServiceLocator::GetService<ILogService>();
@@ -19,7 +19,7 @@ void main()
     }
     // file
     {
-        auto flog = std::unique_ptr<FileLogService>(new FileLogService("log.txt"));
+        auto flog = std::make_unique<FileLogService>("log.txt");
         ServiceLocator::RegisterService<ILogService>(std::move(flog));
     }
     log_service = ServiceLocator::GetService<ILogService>();
@@ -28,7 +28,7 @@ void main()
     }
     // audio
     {
-        //auto audio = std::unique_ptr<NullAudioService>(new NullAudioService());
+        //auto audio = std::make_unique<NullAudioService>();
         //ServiceLocator::RegisterService<IAudioService>(std::move(audio));
         auto audio = std::make_shared<NullAudioService>();
         ServiceLocator::RegisterService<IAudioService>(audio);
