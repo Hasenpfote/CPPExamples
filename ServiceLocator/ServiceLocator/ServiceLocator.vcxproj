@@ -146,9 +146,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="audio_service.h" />
     <ClInclude Include="console_log_service.h" />
     <ClInclude Include="file_log_service.h" />
     <ClInclude Include="log_service.h" />
+    <ClInclude Include="null_audio_service.h" />
     <ClInclude Include="service_locator.h" />
   </ItemGroup>
   <ItemGroup>

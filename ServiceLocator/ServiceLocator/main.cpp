@@ -1,6 +1,7 @@
 ﻿#include "service_locator.h"
 #include "console_log_service.h"
 #include "file_log_service.h"
+#include "null_audio_service.h"
 
 void main()
 {
@@ -23,4 +24,12 @@ void main()
     if(log_service){
         log_service->Write("aaaaaa");
     }
+    // audio
+#if 1
+    {
+        auto audio = std::unique_ptr<NullAudioService>(new NullAudioService());
+        ServiceLocator::Provide<IAudioService>(std::move(audio));
+    }
+#endif
+    auto audio_service = ServiceLocator::GetService<IAudioService>();
 }

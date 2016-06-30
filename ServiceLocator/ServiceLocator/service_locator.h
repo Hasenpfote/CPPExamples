@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <memory>
 #include <unordered_map>
+#include <cassert>
 
 class IService
 {
@@ -27,6 +28,8 @@ public:
     template<typename T>
     static T* GetService()
     {
-        return std::static_pointer_cast<T>(map[typeid(T).name()]).get();
+        auto ptr = map[typeid(T).name()];
+        assert(ptr && "Unbale to find a service.");
+        return std::static_pointer_cast<T>(ptr).get();
     }
 };

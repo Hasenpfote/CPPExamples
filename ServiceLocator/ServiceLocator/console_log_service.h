@@ -6,5 +6,5 @@ class ConsoleLogService final : public ILogService
 public:
     ConsoleLogService() = default;
     ~ConsoleLogService();
-    void Write(const std::string& buffer);
+    void Write(const std::string& buffer) override;
 };
