@@ -1,7 +1,19 @@
-﻿#include "service_locator.h"
+﻿#include <iostream>
+#include "service_locator.h"
 #include "console_log_service.h"
 #include "file_log_service.h"
 #include "null_audio_service.h"
+
+class IUnknownService
+{
+public:
+    IUnknownService() = default;
+    virtual ~IUnknownService() = default;
+    virtual void DoSomething()
+    {
+        std::cout << __func__ << std::endl;
+    }
+};
 
 void main()
 {
@@ -25,11 +37,19 @@ void main()
         log_service->Write("aaaaaa");
     }
     // audio
-#if 1
     {
         auto audio = std::unique_ptr<NullAudioService>(new NullAudioService());
         ServiceLocator::Provide<IAudioService>(std::move(audio));
     }
-#endif
     auto audio_service = ServiceLocator::GetService<IAudioService>();
+    audio_service->Play("aaaaaa");
+    //
+#ifdef ENABLE_TYPE_TEST
+    {
+        auto unknown = std::unique_ptr<IUnknownService>(new IUnknownService());
+        ServiceLocator::Provide<IUnknownService>(std::move(unknown));
+    }
+    auto unknown_service = ServiceLocator::GetService<IUnknownService>();
+    unknown_service->DoSomething();
+#endif
 }

@@ -3,6 +3,8 @@
 #include <unordered_map>
 #include <cassert>
 
+//#define ENABLE_TYPE_TEST
+
 class IService
 {
 public:
@@ -13,7 +15,11 @@ public:
 class ServiceLocator final
 {
 private:
+#ifndef ENABLE_TYPE_TEST
     static std::unordered_map<std::string, std::shared_ptr<IService>> map;
+#else
+    static std::unordered_map<std::string, std::shared_ptr<void>> map;
+#endif
 
 public:
     ServiceLocator() = delete;
