@@ -28,6 +28,9 @@ public:
     template<typename T>
     static void Provide(const std::shared_ptr<T>& object)
     {
+#ifndef ENABLE_TYPE_TEST
+        static_assert(std::is_base_of<IService, T>::value == true, "T must be derived from IService.");
+#endif
         map[typeid(T).name()] = object;
     }
 
