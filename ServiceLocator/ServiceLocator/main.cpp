@@ -4,6 +4,7 @@
 #include "file_log_service.h"
 #include "null_audio_service.h"
 #include "unknown_service.h"
+#include "logger.h"
 
 void main()
 {
@@ -17,6 +18,11 @@ void main()
     if(auto sp = log_service.lock()){
         sp->Write("aaaaaa");
     }
+
+    LOG_D("aaaaaa");
+    LOG_D("bbbbbb");
+    LOG_D("cccccc");
+
     // file
     {
         auto flog = std::make_unique<FileLogService>("log.txt");
