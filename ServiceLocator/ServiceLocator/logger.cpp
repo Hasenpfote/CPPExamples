@@ -6,8 +6,8 @@
 
 std::string Logger::GetTimestamp() const
 {
-    auto now = std::chrono::system_clock::now();
-    auto time = std::chrono::system_clock::to_time_t(now);
+    const auto now = std::chrono::system_clock::now();
+    const auto time = std::chrono::system_clock::to_time_t(now);
     std::tm tm;
 #ifdef _WIN32
     localtime_s(&tm, &time);
