@@ -48,6 +48,10 @@ public:
     {
         auto ptr = map[typeid(T).name()];
         assert(ptr && "Unbale to find a service.");
+#ifndef ENABLE_TYPE_TEST
         return std::dynamic_pointer_cast<T>(ptr);
+#else
+        return std::static_pointer_cast<T>(ptr);
+#endif
     }
 };
