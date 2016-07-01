@@ -151,6 +151,7 @@
     <ClInclude Include="file_log_service.h" />
     <ClInclude Include="log_service.h" />
     <ClInclude Include="null_audio_service.h" />
+    <ClInclude Include="service.h" />
     <ClInclude Include="service_locator.h" />
     <ClInclude Include="unknown_service.h" />
   </ItemGroup>

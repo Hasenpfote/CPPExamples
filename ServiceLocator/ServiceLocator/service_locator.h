@@ -2,15 +2,9 @@
 #include <memory>
 #include <unordered_map>
 #include <cassert>
+#include "service.h"
 
 //#define ENABLE_TYPE_TEST
-
-class IService
-{
-public:
-    IService() = default;
-    virtual ~IService() = default;
-};
 
 class ServiceLocator final
 {
