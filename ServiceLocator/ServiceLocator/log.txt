@@ -1,5 +1,1 @@
 aaaaaa
-07/01/16 16:46:14 I/main.cpp(35) - info
-07/01/16 16:46:14 W/main.cpp(36) - warning
-07/01/16 16:46:14 E/main.cpp(37) - error
-07/01/16 16:46:14 F/main.cpp(38) - fatal
