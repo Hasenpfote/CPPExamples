@@ -21,7 +21,7 @@ public:
     static std::string GetTime();
 
     template<Severity severity>
-    static std::string Logger::GetSeverity()
+    static std::string GetSeverity()
     {
         switch (severity) {
         case Severity::Verbose:
