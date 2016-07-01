@@ -54,12 +54,14 @@ public:
     }
 };
 
+#define SHORT_FILENAME (std::strrchr(__FILE__, '/') ? std::strrchr(__FILE__, '/') + 1 : std::strrchr(__FILE__, '\\') ? std::strrchr(__FILE__, '\\') + 1 : __FILE__)
+
 #define LOG(severity, message)\
     do{\
         auto& inst = Logger::GetInstance();\
         if(severity >= inst.GetSeverity()){\
             std::ostringstream oss;\
-            oss << inst.GetTimestamp() << " " << inst.GetSeverityString<severity>() << __FILE__ << "(" << __LINE__ << ") - " << message;\
+            oss << inst.GetTimestamp() << " " << inst.GetSeverityString<severity>() << SHORT_FILENAME << "(" << __LINE__ << ") - " << message;\
             inst.Log(oss.str());\
         }\
     }while(false)
