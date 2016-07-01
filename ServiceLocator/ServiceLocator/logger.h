@@ -1,29 +1,41 @@
 ﻿#pragma once
 #include <sstream>
+#include "singleton.h"
 
-class Logger final
+class Logger final : public Singleton<Logger>
 {
+    friend class Singleton<Logger>;
 public:
     enum class Severity
     {
-        Verbose,
-        Debug,
-        Info,
-        Warning,
-        Error,
-        Fatal
+        Verbose = 0,
+        Debug = 1,
+        Info = 2,
+        Warning = 3,
+        Error = 4,
+        Fatal = 5
     };
 
-public:
-    Logger() = delete;
-    ~Logger() = delete;
+private:
+    Severity severity;
 
-    static std::string GetTime();
+private:
+    Logger() : severity(Severity::Verbose)
+    {
+    }
+
+public:
+    ~Logger() = default;
+
+    void Log(const std::string& message);
+    void SetSeverity(Severity severity){ this->severity = severity; }
+    Severity GetSeverity() const { return severity; }
+    std::string GetTimestamp() const;
 
     template<Severity severity>
-    static std::string GetSeverity()
+    std::string GetSeverityString() const
     {
-        switch (severity) {
+        switch(severity){
         case Severity::Verbose:
             return "V/";
         case Severity::Debug:
@@ -40,20 +52,34 @@ public:
             return "U/";
         }
     }
-
-    static void Log(const std::string& buffer);
 };
 
 #define LOG(severity, message)\
     do{\
-        std::ostringstream oss;\
-        oss << Logger::GetTime() << " " << Logger::GetSeverity<severity>() << __FILE__ << "(" << __LINE__ << ") " << message;\
-        Logger::Log(oss.str());\
+        auto& inst = Logger::GetInstance();\
+        if(severity >= inst.GetSeverity()){\
+            std::ostringstream oss;\
+            oss << inst.GetTimestamp() << " " << inst.GetSeverityString<severity>() << __FILE__ << "(" << __LINE__ << ") - " << message;\
+            inst.Log(oss.str());\
+        }\
+    }while(false)
+#define NOLOG(message)\
+    do{\
+        static_cast<void>((true ? static_cast<void>(0) : static_cast<void>((std::ostringstream() << message))));\
     }while(false)
 
+#ifdef NDEBUG
+#define LOG_V(message)  NOLOG(message)
+#define LOG_D(message)  NOLOG(message)
+#define LOG_I(message)  LOG(Logger::Severity::Info, message)
+#define LOG_W(message)  LOG(Logger::Severity::Warning, message)
+#define LOG_E(message)  LOG(Logger::Severity::Error, message)
+#define LOG_F(message)  LOG(Logger::Severity::Fatal, message)
+#else
 #define LOG_V(message)  LOG(Logger::Severity::Verbose, message)
 #define LOG_D(message)  LOG(Logger::Severity::Debug, message)
 #define LOG_I(message)  LOG(Logger::Severity::Info, message)
 #define LOG_W(message)  LOG(Logger::Severity::Warning, message)
 #define LOG_E(message)  LOG(Logger::Severity::Error, message)
 #define LOG_F(message)  LOG(Logger::Severity::Fatal, message)
+#endif

@@ -3,49 +3,55 @@
 #include <unordered_map>
 #include <cassert>
 #include "service.h"
+#include "singleton.h"
 
 //#define ENABLE_TYPE_TEST
 
-class ServiceLocator final
+class ServiceLocator final : public Singleton<ServiceLocator>
 {
+    friend class Singleton<ServiceLocator>;
 private:
 #ifndef ENABLE_TYPE_TEST
-    static std::unordered_map<std::string, std::shared_ptr<IService>> map;
+    std::unordered_map<std::string, std::shared_ptr<IService>> service;
 #else
-    static std::unordered_map<std::string, std::shared_ptr<void>> map;
+    std::unordered_map<std::string, std::shared_ptr<void>> service;
 #endif
+private:
+    ServiceLocator() = default;
+public:
+    ~ServiceLocator() = default;
 
 public:
-    ServiceLocator() = delete;
-    ~ServiceLocator() = delete;
-
     template<typename T>
-    static void RegisterService(const std::shared_ptr<T>& object)
+    void RegisterService(const std::shared_ptr<T>& object)
     {
 #ifndef ENABLE_TYPE_TEST
         static_assert(std::is_base_of<IService, T>::value == true, "T must be derived from IService.");
 #endif
-        map[typeid(T).name()] = object;
+        service[typeid(T).name()] = object;
     }
 
     template<typename T>
-    static void UnregisterService()
+    void UnregisterService()
     {
-        auto& it = map.find(typeid(T).name());
-        if(it != map.end()){
-            map.erase(it);
+        auto& it = service.find(typeid(T).name());
+        if(it != service.end()){
+            service.erase(it);
         }
     }
 
     template<typename T>
-    static std::weak_ptr<T> GetService()
+    std::weak_ptr<T> GetService() const
     {
-        auto ptr = map[typeid(T).name()];
-        assert(ptr && "Unbale to find a service.");
+        auto& it = service.find(typeid(T).name());
+        if(it != service.cend()){
 #ifndef ENABLE_TYPE_TEST
-        return std::dynamic_pointer_cast<T>(ptr);
+            return std::dynamic_pointer_cast<T>(it->second);
 #else
-        return std::static_pointer_cast<T>(ptr);
+            return std::static_pointer_cast<T>(it->second);
 #endif
+        }
+        assert(!"Unbale to find a service.");
+        return std::weak_ptr<T>();
     }
 };
