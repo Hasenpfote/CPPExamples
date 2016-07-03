@@ -1,7 +1,8 @@
 ﻿#pragma once
 #include <memory>
 #include <mutex>
-#include "log.h"
+
+class ILog;
 
 class Logger final
 {

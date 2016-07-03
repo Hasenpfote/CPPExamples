@@ -1,6 +1,7 @@
 ﻿#include <sstream>
 #include <chrono>
 #include <iomanip>
+#include "log.h"
 #include "logger.h"
 
 static std::string GetTimestamp()
