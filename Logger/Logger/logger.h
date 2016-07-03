@@ -23,7 +23,7 @@ private:
     std::mutex m;
 
 public:
-    Logger(const std::shared_ptr<ILog> log) : log(log), severity(Severity::Verbose)
+    Logger(const std::shared_ptr<ILog>& log) : log(log), severity(Severity::Verbose)
     {
     }
     ~Logger() = default;
