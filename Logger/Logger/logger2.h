@@ -4,7 +4,7 @@
 
 class ILog;
 
-class Logger2 final
+class Logger2
 {
 public:
     enum class Severity
@@ -19,7 +19,7 @@ public:
 
 public:
     Logger2();
-    ~Logger2();
+    virtual ~Logger2();
 
     Logger2(const Logger2&) = delete;
     Logger2& operator = (const Logger2&) = delete;
