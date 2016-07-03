@@ -17,17 +17,22 @@ public:
         Fatal = 5
     };
 
-private:
-    std::shared_ptr<ILog> log;
-    Severity severity;
-    std::mutex m;
-
 public:
     Logger(const std::shared_ptr<ILog>& log) : log(log), severity(Severity::Verbose)
     {
     }
     ~Logger() = default;
 
+    Logger(const Logger&) = delete;
+    Logger& operator = (const Logger&) = delete;
+    Logger(Logger&&) = delete;
+    Logger& operator = (Logger&&) = delete;
+
     void SetSeverity(Severity severity);
     void Log(Severity severity, const std::string& filename, int line, const std::string& message);
+
+private:
+    std::shared_ptr<ILog> log;
+    Severity severity;
+    std::mutex m;
 };
