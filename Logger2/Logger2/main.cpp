@@ -21,16 +21,16 @@ static void do_worker()
 
 void main()
 {
-    using namespace example;
+    using namespace example::mylog;
 
 #ifdef NDEBUG
-    Logger::GetInstance().SetSeverity(Logger::Severity::Fatal);
+    ::Logger::GetInstance().SetSeverity(::Logger::Severity::Fatal);
 #else
-    Logger::GetInstance().SetSeverity(Logger::Severity::Verbose);
+    ::Logger::GetInstance().SetSeverity(::Logger::Severity::Verbose);
 #endif
-    Logger::GetInstance().AddAppender<mylog::ConsoleAppender>(std::make_shared<mylog::ConsoleAppender>());
-    Logger::GetInstance().AddAppender<mylog::RollingFileAppender>(std::make_shared<mylog::RollingFileAppender>("Logs/log.txt", 10));
-    Logger::GetInstance().RemoveAppender<mylog::RollingFileAppender>();
+    ::Logger::GetInstance().AddAppender<ConsoleAppender>(std::make_shared<ConsoleAppender>());
+    ::Logger::GetInstance().AddAppender<RollingFileAppender>(std::make_shared<RollingFileAppender>("Logs/log.txt", 10));
+    ::Logger::GetInstance().RemoveAppender<RollingFileAppender>();
 
     std::thread t1(do_worker);
     std::thread t2(do_worker);

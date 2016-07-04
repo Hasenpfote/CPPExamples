@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <sstream>
 #include "logger.h"
 #include "singleton.h"
 
@@ -19,7 +20,7 @@ public:
     do{\
         std::ostringstream oss;\
         oss << message;\
-        Logger::GetInstance().Log(severity, SHORT_FILENAME, __LINE__, oss.str());\
+        ::Logger::GetInstance().Log(severity, SHORT_FILENAME, __LINE__, oss.str());\
     }while (false)
 
 #define NOLOG(message)\
@@ -31,10 +32,10 @@ public:
 #define LOG_V(message) NOLOG(message)
 #define LOG_D(message) NOLOG(message)
 #else
-#define LOG_V(message) LOG(Logger::Severity::Verbose, message)
-#define LOG_D(message) LOG(Logger::Severity::Debug, message)
+#define LOG_V(message) LOG(::Logger::Severity::Verbose, message)
+#define LOG_D(message) LOG(::Logger::Severity::Debug, message)
 #endif
-#define LOG_I(message) LOG(Logger::Severity::Info, message)
-#define LOG_W(message) LOG(Logger::Severity::Warning, message)
-#define LOG_E(message) LOG(Logger::Severity::Error, message)
-#define LOG_F(message) LOG(Logger::Severity::Fatal, message)
+#define LOG_I(message) LOG(::Logger::Severity::Info, message)
+#define LOG_W(message) LOG(::Logger::Severity::Warning, message)
+#define LOG_E(message) LOG(::Logger::Severity::Error, message)
+#define LOG_F(message) LOG(::Logger::Severity::Fatal, message)
