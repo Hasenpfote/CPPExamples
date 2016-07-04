@@ -8,7 +8,7 @@
 #include <string>
 #include <memory>
 
-namespace mylog{
+namespace example{ namespace mylog{
 
 class IAppender;
 
@@ -61,4 +61,4 @@ private:
     std::unique_ptr<Impl> pimpl;
 };
 
-}
+}}

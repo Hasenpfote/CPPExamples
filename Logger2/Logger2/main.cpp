@@ -13,7 +13,7 @@ static void do_worker()
     auto id = std::this_thread::get_id();
     auto& inst = Logger::GetInstance();
     while(i < max_output){
-        LOG_D("[" << id << "] - " << i);
+        LOG_F("[" << id << "] - " << i);
         i++;
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
@@ -21,6 +21,8 @@ static void do_worker()
 
 void main()
 {
+    using namespace example;
+
 #ifdef NDEBUG
     Logger::GetInstance().SetSeverity(Logger::Severity::Fatal);
 #else

@@ -7,7 +7,7 @@
 #include "appender.h"
 #include "logger.h"
 
-namespace mylog{
+namespace example{ namespace mylog{
 
 static std::string GetTimestamp(std::string& format)
 {
@@ -146,4 +146,4 @@ void Logger::SetTimestampFormat(const std::string& format)
     pimpl->SetTimestampFormat(format);
 }
 
-}
+}}

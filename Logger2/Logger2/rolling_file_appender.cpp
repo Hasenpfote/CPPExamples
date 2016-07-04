@@ -1,7 +1,7 @@
 ﻿#include <sstream>
 #include "rolling_file_appender.h"
 
-namespace mylog{
+namespace example{ namespace mylog{
 
 static std::tr2::sys::path BuildFilePath(const std::tr2::sys::path& filepath, int number)
 {
@@ -47,4 +47,4 @@ void RollingFileAppender::Write(const std::string& buffer)
     *ofs << buffer.c_str() << std::endl;
 }
 
-}
+}}

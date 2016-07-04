@@ -10,7 +10,7 @@
 #include <filesystem>
 #include "appender.h"
 
-namespace mylog{
+namespace example{ namespace mylog{
 
 class FileAppender final : public IAppender
 {
@@ -26,4 +26,4 @@ private:
     std::unique_ptr<std::ofstream> ofs;
 };
 
-}
+}}

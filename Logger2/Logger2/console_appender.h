@@ -7,7 +7,7 @@
 #pragma once
 #include "appender.h"
 
-namespace mylog{
+namespace example{ namespace mylog{
 
 class ConsoleAppender final : public IAppender
 {
@@ -17,4 +17,4 @@ public:
     void Write(const std::string& buffer) override;
 };
 
-}
+}}

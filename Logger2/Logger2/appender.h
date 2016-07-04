@@ -7,7 +7,7 @@
 #pragma once
 #include <string>
 
-namespace mylog{
+namespace example{ namespace mylog{
 
 class IAppender
 {
@@ -23,4 +23,4 @@ public:
     virtual void Write(const std::string& buffer) = 0;
 };
 
-}
+}}

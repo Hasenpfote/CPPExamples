@@ -11,7 +11,7 @@
 #include <cassert>
 #include "appender.h"
 
-namespace mylog{
+namespace example{ namespace mylog{
 
 class RollingFileAppender final : public IAppender
 {
@@ -31,4 +31,4 @@ private:
     int max_files;
 };
 
-}
+}}

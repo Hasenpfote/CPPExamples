@@ -2,7 +2,7 @@
 #include "logger.h"
 #include "singleton.h"
 
-class Logger final : public mylog::Logger, public Singleton<Logger>
+class Logger final : public example::mylog::Logger, public Singleton<Logger>
 {
     friend class Singleton<Logger>;
 private:
