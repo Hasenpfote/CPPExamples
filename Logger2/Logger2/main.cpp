@@ -5,7 +5,7 @@
 #include "console_appender.h"
 #include "rolling_file_appender.h"
 
-static constexpr auto max_output = 10;
+static constexpr auto max_output = 1000;
 
 static void do_worker()
 {
@@ -29,7 +29,7 @@ void main()
     ::Logger::GetInstance().SetSeverity(::Logger::Severity::Verbose);
 #endif
     ::Logger::GetInstance().AddAppender<ConsoleAppender>(std::make_shared<ConsoleAppender>());
-    ::Logger::GetInstance().AddAppender<RollingFileAppender>(std::make_shared<RollingFileAppender>("Logs/log.txt", 10));
+    ::Logger::GetInstance().AddAppender<RollingFileAppender>(std::make_shared<RollingFileAppender>("Logs/log.log", 3));
     ::Logger::GetInstance().RemoveAppender<RollingFileAppender>();
 
     std::thread t1(do_worker);
