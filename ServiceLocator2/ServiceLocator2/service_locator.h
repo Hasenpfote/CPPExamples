@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <memory>
 #include <cassert>
+#include <typeindex>
 
 namespace example{ namespace service{
 
@@ -28,14 +29,14 @@ public:
     void RegisterService(const std::shared_ptr<IService>& service)
     {
         static_assert(std::is_base_of<IService, T>::value == true, "T must be derived from IService.");
-        this->service[typeid(T).name()] = service;
+        this->service[typeid(T)] = service;
     }
 
     template<typename T>
     void UnregisterService()
     {
         static_assert(std::is_base_of<IService, T>::value == true, "T must be derived from IService.");
-        auto& it = service.find(typeid(T).name());
+        auto& it = service.find(typeid(T));
         if(it != service.end()){
             service.erase(it);
         }
@@ -45,7 +46,7 @@ public:
     std::weak_ptr<T> GetService() const
     {
         static_assert(std::is_base_of<IService, T>::value == true, "T must be derived from IService.");
-        auto& it = service.find(typeid(T).name());
+        auto& it = service.find(typeid(T));
         if(it != service.cend()){
             return std::dynamic_pointer_cast<T>(it->second);
         }
@@ -54,7 +55,7 @@ public:
     }
 
 private:
-    std::unordered_map<std::string, std::shared_ptr<IService>> service;
+    std::unordered_map<std::type_index, std::shared_ptr<IService>> service;
 };
 
 }}

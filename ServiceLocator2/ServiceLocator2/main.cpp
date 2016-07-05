@@ -14,7 +14,7 @@ void do_something()
 void main()
 {
     sl.RegisterService<LogService>(std::make_shared<LogService>());
-    sl.UnregisterService<LogService>();
+    //sl.UnregisterService<LogService>();
 
     do_something();
 }
