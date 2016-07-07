@@ -15,7 +15,7 @@ namespace example{ namespace mylog{
 class FileAppender final : public IAppender
 {
 public:
-    FileAppender(const std::tr2::sys::path& filepath)
+    explicit FileAppender(const std::tr2::sys::path& filepath)
         : ofs(std::make_unique<std::ofstream>(filepath))
     {
     }

@@ -5,11 +5,11 @@
 
 class FileLogService final : public ILogService
 {
-private:
-    std::unique_ptr<std::ofstream> ofs;
-
 public:
-    FileLogService(const std::tr2::sys::path& filepath);
+    explicit FileLogService(const std::tr2::sys::path& filepath);
     ~FileLogService();
     void Write(const std::string& buffer) override;
+
+private:
+    std::unique_ptr<std::ofstream> ofs;
 };

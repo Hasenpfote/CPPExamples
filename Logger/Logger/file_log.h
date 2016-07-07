@@ -10,7 +10,7 @@ private:
     std::unique_ptr<std::ofstream> ofs;
 
 public:
-    FileLog(const std::tr2::sys::path& filepath)
+    explicit FileLog(const std::tr2::sys::path& filepath)
         : ofs(std::make_unique<std::ofstream>(filepath))
     {
     }

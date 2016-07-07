@@ -17,9 +17,6 @@ public:
     };
 
 private:
-    Severity severity;
-
-private:
     Logger() : severity(Severity::Verbose)
     {
     }
@@ -52,6 +49,9 @@ public:
             return "U/";
         }
     }
+
+private:
+    Severity severity;
 };
 
 #define SHORT_FILENAME (std::strrchr(__FILE__, '/') ? std::strrchr(__FILE__, '/') + 1 : std::strrchr(__FILE__, '\\') ? std::strrchr(__FILE__, '\\') + 1 : __FILE__)

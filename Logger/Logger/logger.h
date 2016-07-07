@@ -18,7 +18,7 @@ public:
     };
 
 public:
-    Logger(const std::shared_ptr<ILog>& log) : log(log), severity(Severity::Verbose)
+    explicit Logger(const std::shared_ptr<ILog>& log) : log(log), severity(Severity::Verbose)
     {
     }
     ~Logger() = default;
