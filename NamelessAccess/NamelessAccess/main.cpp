@@ -29,22 +29,6 @@ private:
     };
 };
 
-struct point {
-    point(int x, int y) : x_(x), y_(y) {}
-    int x() const { return x_; }
-    int y() const { return y_; }
-    int hash() const { return hash_; }
-
-private:
-    union {
-        int hash_;
-        struct {
-            short x_;
-            short y_;
-        };
-    };
-};
-
 void main()
 {
     Foo foo;
