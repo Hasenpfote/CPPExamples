@@ -39,7 +39,7 @@
     <ClInclude Include="singleton.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="impl\logger.h">
+    <ClInclude Include="impl\logger_impl.h">
       <Filter>ヘッダー ファイル\impl</Filter>
     </ClInclude>
   </ItemGroup>

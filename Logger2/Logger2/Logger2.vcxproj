@@ -149,7 +149,7 @@
     <ClInclude Include="appender.h" />
     <ClInclude Include="console_appender.h" />
     <ClInclude Include="file_appender.h" />
-    <ClInclude Include="impl\logger.h" />
+    <ClInclude Include="impl\logger_impl.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="rolling_file_appender.h" />
     <ClInclude Include="singleton.h" />

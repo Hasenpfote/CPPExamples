@@ -56,4 +56,4 @@ private:
 
 }}
 
-#include "impl/logger.h"
+#include "impl/logger_impl.h"
