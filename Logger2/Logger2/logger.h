@@ -36,18 +36,10 @@ public:
     Logger& operator = (Logger&&) = delete;
 
     template<typename T>
-    void AddAppender(const std::shared_ptr<IAppender>& appender)
-    {
-        static_assert(std::is_base_of<IAppender, T>::value == true, "T must be derived from IAppender.");
-        AddAppender(typeid(T), appender);
-    }
+    void AddAppender(const std::shared_ptr<IAppender>& appender);
 
     template<typename T>
-    void RemoveAppender()
-    {
-        static_assert(std::is_base_of<IAppender, T>::value == true, "T must be derived from IAppender.");
-        RemoveAppender(typeid(T));
-    }
+    void RemoveAppender();
 
     void SetSeverity(Severity severity);
     void Log(Severity severity, const std::string& filename, int line, const std::string& message);
@@ -63,3 +55,5 @@ private:
 };
 
 }}
+
+#include "impl/logger.h"

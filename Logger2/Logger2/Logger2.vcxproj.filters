@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ヘッダー ファイル\impl">
+      <UniqueIdentifier>{76b93bca-0185-4948-bc4a-c7caf829f8f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="appender.h">
@@ -35,6 +38,9 @@
     </ClInclude>
     <ClInclude Include="singleton.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="impl\logger.h">
+      <Filter>ヘッダー ファイル\impl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
