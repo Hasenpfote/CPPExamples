@@ -10,6 +10,5 @@ public:
     virtual ~AudioService() = default;
     virtual void Play(const std::string& buffer)
     {
-        //std::cout << buffer << std::endl;
     }
 };

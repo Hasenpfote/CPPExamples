@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ヘッダー ファイル\impl">
+      <UniqueIdentifier>{e6460ac2-9be5-49ad-a4b8-1da5f04cdded}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -31,6 +34,9 @@
     </ClInclude>
     <ClInclude Include="audio_service.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="impl\service_locator_impl.h">
+      <Filter>ヘッダー ファイル\impl</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -10,6 +10,5 @@ public:
     virtual ~LogService() = default;
     virtual void Write(const std::string& buffer)
     {
-        //std::cout << buffer << std::endl;
     }
 };

@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio_service.h" />
+    <ClInclude Include="impl\service_locator_impl.h" />
     <ClInclude Include="log_service.h" />
     <ClInclude Include="service.h" />
     <ClInclude Include="service_locator.h" />
