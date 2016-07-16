@@ -48,10 +48,10 @@ private:
         std::call_once(
             GetOnceFlag(),
             [](Arguments&&... args)
-        {
-            std::cout << "initialize." << std::endl;
-            instance.reset(new T(std::forward<Arguments>(args)...));
-        },
+                {
+                    std::cout << "initialize." << std::endl;
+                    instance.reset(new T(std::forward<Arguments>(args)...));
+                },
             std::forward<Arguments>(args)...
             );
         return *instance;
