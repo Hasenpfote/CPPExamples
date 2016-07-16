@@ -13,7 +13,7 @@ void do_something1()
     int i = 0;
     while(i < count)
     {
-        auto& ref = Foo::GetInstance(v);
+        auto& ref = Foo::GetConstInstance(v);
     }
 }
 
@@ -23,20 +23,26 @@ void do_something2()
     int i = 0;
     while (i < count)
     {
-        auto& ref = Foo::GetInstance(4,5,6);
+        auto& ref = Foo::GetConstInstance(4,5,6);
     }
 }
 
 int main()
 {
     std::cout << __func__ << ": begin" << std::endl;
-#if 0
-    const int count = 100000;
+
+    {
+        auto& ref = Foo::GetMutableInstance(4, 5, 6);
+        //auto& ref = Foo::GetConstInstance(4, 5, 6);
+        ref.Func();
+    }
+#if 1
+    const int count = 100;
     int i = 0;
     auto start = std::chrono::system_clock::now();
     while(i < count)
     {
-        auto& ref = Foo::GetInstance(4, 5, 6);
+        auto& ref = Foo::GetConstInstance(4, 5, 6);
         i++;
     }
     auto end = std::chrono::system_clock::now();

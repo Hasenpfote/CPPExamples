@@ -37,7 +37,12 @@ public:
 public:
     void Func()
     {
-        std::cout << __func__ << std::endl;
+        std::cout << __func__ << " Mutable func." << std::endl;
+    }
+
+    void Func() const
+    {
+        std::cout << __func__ << " Const func." << std::endl;
     }
 private:
 };

@@ -30,27 +30,40 @@ public:
     Singleton& operator=(Singleton&&) = delete;
 
     template<typename... Arguments>
+    static T& GetMutableInstance(Arguments&&... args)
+    {
+        return GetInstance(std::forward<Arguments>(args)...);
+    }
+
+    template<typename... Arguments>
+    static const T& GetConstInstance(Arguments&&... args)
+    {
+        return GetInstance(std::forward<Arguments>(args)...);
+    }
+
+private:
+    template<typename... Arguments>
     static T& GetInstance(Arguments&&... args)
     {
         std::call_once(
             GetOnceFlag(),
             [](Arguments&&... args)
-                {
-                    std::cout << "initialize." << std::endl;
-                    instance.reset(new T(std::forward<Arguments>(args)...));
-                },
+        {
+            std::cout << "initialize." << std::endl;
+            instance.reset(new T(std::forward<Arguments>(args)...));
+        },
             std::forward<Arguments>(args)...
             );
         return *instance;
     }
 
-private:
-    static std::unique_ptr<T> instance;
     static std::once_flag& GetOnceFlag()
     {
         static std::once_flag once;
         return once;
     }
+
+    static std::unique_ptr<T> instance;
 };
 
 template<typename T> std::unique_ptr<T> Singleton<T>::instance = nullptr;
