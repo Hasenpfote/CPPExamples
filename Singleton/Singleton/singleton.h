@@ -9,13 +9,12 @@
 #include <functional>
 #include <mutex>
 
-#define ENABLE_TEST_1       // 引数は何でも受け付ける.
-//#define ENABLE_TEST_2       // 引数は rvalue を受け付けない.
-
+//#define ENABLE_BIND_VERSION
 
 namespace example{
 
-#ifdef ENABLE_TEST_1
+#ifndef ENABLE_BIND_VERSION
+// GetInstance の引数は何でも受け付ける.
 template<typename T>
 class Singleton
 {
@@ -30,45 +29,21 @@ public:
     Singleton& operator=(Singleton&&) = delete;
 
     template<typename... Arguments>
-    static T& GetMutableInstance(Arguments&&... args)
-    {
-        return GetInstance(std::forward<Arguments>(args)...);
-    }
+    static T& GetMutableInstance(Arguments&&... args);
 
     template<typename... Arguments>
-    static const T& GetConstInstance(Arguments&&... args)
-    {
-        return GetInstance(std::forward<Arguments>(args)...);
-    }
+    static const T& GetConstInstance(Arguments&&... args);
 
 private:
     template<typename... Arguments>
-    static T& GetInstance(Arguments&&... args)
-    {
-        std::call_once(
-            GetOnceFlag(),
-            [](Arguments&&... args)
-                {
-                    std::cout << "initialize." << std::endl;
-                    instance.reset(new T(std::forward<Arguments>(args)...));
-                },
-            std::forward<Arguments>(args)...
-            );
-        return *instance;
-    }
+    static T& GetInstance(Arguments&&... args);
 
-    static std::once_flag& GetOnceFlag()
-    {
-        static std::once_flag once;
-        return once;
-    }
+    static std::once_flag& GetOnceFlag();
 
     static std::unique_ptr<T> instance;
 };
-
-template<typename T> std::unique_ptr<T> Singleton<T>::instance = nullptr;
-#endif
-#ifdef ENABLE_TEST_2
+#else
+// GetInstance の引数は rvalue を受け付けない.
 template<typename T>
 class Singleton
 {
@@ -83,26 +58,21 @@ public:
     Singleton& operator=(Singleton&&) = delete;
 
     template<typename... Arguments>
-    static T& GetInstance(const Arguments&... args)
-    {
-        // インスタンスの多重生成の回避.
-        static auto once_func = std::bind(CreateInstance<Arguments...>, std::ref(args)...); // 値渡しの回避.
-        return Apply(once_func);
-    }
-
-private:
-    static T& Apply(const std::function<T*()>& func)
-    {
-        static std::unique_ptr<T> instance(func()); // 一度だけ初期化される.
-        return *instance;
-    }
+    static T& GetMutableInstance(Arguments&&... args);
 
     template<typename... Arguments>
-    static T* CreateInstance(const Arguments&... args)
-    {
-        return new T(args...);
-    }
+    static const T& GetConstInstance(Arguments&&... args);
+
+private:
+    template<typename... Arguments>
+    static T& GetInstance(const Arguments&... args);
+
+    static T& Apply(const std::function<T*()>& func);
+
+    template<typename... Arguments>
+    static T* CreateInstance(const Arguments&... args);
 };
 #endif
-
 }
+
+#include "impl/singleton_impl.h"

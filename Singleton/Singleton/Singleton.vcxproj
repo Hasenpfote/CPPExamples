@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="foobar.h" />
+    <ClInclude Include="impl\singleton_impl.h" />
     <ClInclude Include="singleton.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
