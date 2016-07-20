@@ -12,18 +12,6 @@
 
 namespace example{
 
-class SingletonFinalizer final
-{
-    using Callback = std::function<void()>;
-
-public:
-    static void Register(const Callback& cb);
-    static void Finalize();
-
-private:
-    static std::stack<Callback> cbs;
-};
-
 template<typename T>
 class Singleton
 {
@@ -52,6 +40,27 @@ private:
     static std::once_flag& GetOnceFlag();
 
     static std::unique_ptr<T> instance;
+};
+
+class SingletonFinalizer final
+{
+    template<typename T>
+    friend class Singleton;
+
+public:
+    using Callback = std::function<void()>;
+
+public:
+    SingletonFinalizer() = delete;
+    ~SingletonFinalizer() = delete;
+    SingletonFinalizer(const SingletonFinalizer&) = delete;
+    SingletonFinalizer& operator=(const SingletonFinalizer&) = delete;
+    SingletonFinalizer(SingletonFinalizer&&) = delete;
+    SingletonFinalizer& operator=(SingletonFinalizer&&) = delete;
+
+private:
+    static void Register(const Callback& cb);
+    static void Finalize();
 };
 
 }

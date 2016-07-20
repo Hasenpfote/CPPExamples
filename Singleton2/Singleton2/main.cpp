@@ -5,8 +5,6 @@
 
 void main()
 {
-    Foo::GetMutableInstance();
     Bar::GetMutableInstance();
-
-    example::SingletonFinalizer::Finalize();
+    Foo::GetMutableInstance();
 }

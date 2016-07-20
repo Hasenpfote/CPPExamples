@@ -39,7 +39,7 @@ T& Singleton<T>::GetInstance(Arguments&&... args)
 template<typename T>
 void Singleton<T>::DestroyInstance()
 {
-    if (instance)
+    if(instance)
         instance.reset();
 }
 
