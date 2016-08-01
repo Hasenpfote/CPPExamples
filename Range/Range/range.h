@@ -6,7 +6,6 @@
 */
 #pragma once
 #include <type_traits>
-#include <cassert>
 
 namespace example{ namespace range{
 
@@ -24,43 +23,16 @@ public:
     range_iterator(range_iterator&&) = default;
     range_iterator& operator = (range_iterator&&) = default;
 
-    explicit range_iterator(T position)
-        : position(position)
-    {
-    }
+    explicit range_iterator(T position);
 
-    bool operator == (const range_iterator& rhs) const
-    {
-        return position == rhs.position;
-    }
+    bool operator == (const range_iterator& rhs) const;
+    bool operator != (const range_iterator& rhs) const;
 
-    bool operator != (const range_iterator& rhs) const
-    {
-        return position != rhs.position;
-    }
+    range_iterator& operator ++ ();
+    range_iterator operator ++ (int);
 
-    range_iterator& operator ++ ()
-    {
-        ++position;
-        return *this;
-    }
-
-    range_iterator operator ++ (int)
-    {
-        range_iterator temp = *this;
-        ++position;
-        return temp;
-    }
-
-    T& operator * ()
-    {
-        return position;
-    }
-
-    const T& operator * () const
-    {
-        return position;
-    }
+    T& operator * ();
+    const T& operator * () const;
 
 private:
     T position;
@@ -83,21 +55,10 @@ public:
     range(range&&) = default;
     range& operator = (range&&) = default;
 
-    range(const T& first, const T& last)
-        : first(first), last(last)
-    {
-        assert(first <= last);
-    }
+    range(const T& first, const T& last);
 
-    iterator begin() const
-    {
-        return iterator(first);
-    }
-
-    iterator end() const
-    {
-        return iterator(last);
-    }
+    iterator begin() const;
+    iterator end() const;
 
 private:
     T first;
@@ -105,3 +66,5 @@ private:
 };
 
 }}
+
+#include "impl/range_impl.h"

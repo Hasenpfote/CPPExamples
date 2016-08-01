@@ -44,6 +44,7 @@ void func(const std::vector<irange>& ranges)
 void main()
 {
     using namespace example::range;
+
 #if 0
     using CharRange = range<std::uint32_t>;
 
