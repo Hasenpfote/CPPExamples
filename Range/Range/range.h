@@ -1,42 +1,10 @@
-﻿/*!
-* @file range.h
-* @brief Simple range class.
-* @author Hasenpfote
-* @date 2016/07/31
-*/
-#pragma once
+﻿#pragma once
+#include <iterator>
 #include <type_traits>
+#include <cassert>
+#include "detail/range_iterator_base.h"
 
 namespace example{ namespace range{
-
-template <typename T>
-class range_iterator final
-{
-    static_assert(std::is_integral<T>::value, "T must be a integer type.");
-
-public:
-    range_iterator() = default;
-    ~range_iterator() = default;
-
-    range_iterator(const range_iterator&) = default;
-    range_iterator& operator = (const range_iterator&) = default;
-    range_iterator(range_iterator&&) = default;
-    range_iterator& operator = (range_iterator&&) = default;
-
-    explicit range_iterator(T position);
-
-    bool operator == (const range_iterator& rhs) const;
-    bool operator != (const range_iterator& rhs) const;
-
-    range_iterator& operator ++ ();
-    range_iterator operator ++ (int);
-
-    T& operator * ();
-    const T& operator * () const;
-
-private:
-    T position;
-};
 
 template <typename T>
 class range final
@@ -44,7 +12,11 @@ class range final
     static_assert(std::is_integral<T>::value, "T must be a integer type.");
 
 public:
-    using iterator = range_iterator<T>;
+    struct iterator final : public detail::range_iterator_base<T>
+    {
+    public:
+        iterator(T position) : range_iterator_base<T>(position) {}
+    };
 
 public:
     range() = delete;
@@ -55,10 +27,20 @@ public:
     range(range&&) = default;
     range& operator = (range&&) = default;
 
-    range(const T& first, const T& last);
+    range(const T& first, const T& last)
+        : first(first), last(last)
+    {
+        assert(first <= last);
+    }
 
-    iterator begin() const;
-    iterator end() const;
+    iterator begin() const
+    {
+        return iterator(first);
+    }
+    iterator end() const
+    {
+        return iterator(last);
+    }
 
 private:
     T first;
@@ -66,5 +48,3 @@ private:
 };
 
 }}
-
-#include "impl/range_impl.h"

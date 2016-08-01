@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <vector>
 #include <algorithm>
+#include <numeric>
 #include "range.h"
 
 using irange = example::range::range<int>;
@@ -45,19 +46,27 @@ void main()
 {
     using namespace example::range;
 
-#if 0
-    using CharRange = range<std::uint32_t>;
-
-    const auto r = CharRange(1, 10);
-
-    for(auto& it = r.begin(); it != r.end(); it++){
-        std::cout << *it << std::endl;
+    {
+        std::cout << sizeof(range<int>) << std::endl;
+        std::cout << sizeof(range<int>::iterator) << std::endl;
     }
+    //
+    {
+        const auto r = range<int>(-5, 10);
 
-    for(auto& i : r){
-        std::cout << i << std::endl;
+        auto it = std::find(r.begin(), r.end(), 3);
+        std::cout << "find: " << *it << std::endl;
+        //
+        std::cout << "distance: " << std::distance(r.begin(), r.end()) << std::endl;
+        //
+        std::cout << "accumulate: " << std::accumulate(r.begin(), r.end(), 0) << std::endl;
+        //
+        for(auto value : range<unsigned int>(0, 9)){
+            std::cout << value << ' ';
+        }
+        std::cout << std::endl;
     }
-#else
+    //
     {
         std::vector<irange> v;
         v.push_back(irange(3,5));
@@ -74,5 +83,4 @@ void main()
         std::cout << "after" << std::endl;
         func(v);
     }
-#endif
 }

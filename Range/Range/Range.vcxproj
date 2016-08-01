@@ -149,7 +149,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="impl\range_impl.h" />
+    <ClInclude Include="detail\range_iterator_base.h" />
     <ClInclude Include="range.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
