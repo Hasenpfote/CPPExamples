@@ -45,13 +45,13 @@ void func(const std::vector<irange>& ranges)
 void test(const example::range::range<int>& range)
 {
     std::cout << "Basic for loops:" << std::endl;
-    for (auto& it = range.begin(); it != range.end(); ++it) {
+    for(auto it = range.begin(); it != range.end(); ++it){
         std::cout << *it << ' ';
     }
     std::cout << std::endl;
     //
     std::cout << "Range-based for loops:" << std::endl;
-    for (auto value : range) {
+    for(auto value : range){
         std::cout << value << ' ';
     }
     std::cout << std::endl;
