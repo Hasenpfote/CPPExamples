@@ -42,6 +42,37 @@ void func(const std::vector<irange>& ranges)
     }
 }
 
+void test(const example::range::range<int>& range)
+{
+    std::cout << "Basic for loops:" << std::endl;
+    for (auto& it = range.begin(); it != range.end(); ++it) {
+        std::cout << *it << ' ';
+    }
+    std::cout << std::endl;
+    //
+    std::cout << "Range-based for loops:" << std::endl;
+    for (auto value : range) {
+        std::cout << value << ' ';
+    }
+    std::cout << std::endl;
+    //
+    std::cout << "for_each loops:" << std::endl;
+    std::for_each(
+        range.begin(),
+        range.end(),
+        [](int value){ std::cout << value << ' '; }
+    );
+    std::cout << std::endl;
+    //
+    auto it = std::find(range.begin(), range.end(), 3);
+    //it++;
+    std::cout << std::boolalpha << "find: " << (it != range.end()) << std::endl;
+    //
+    std::cout << "distance: " << std::distance(range.begin(), range.end()) << std::endl;
+    //
+    std::cout << "accumulate: " << std::accumulate(range.begin(), range.end(), 0) << std::endl;
+}
+
 void main()
 {
     using namespace example::range;
@@ -52,19 +83,10 @@ void main()
     }
     //
     {
-        const auto r = range<int>(-5, 10);
-
-        auto it = std::find(r.begin(), r.end(), 3);
-        std::cout << "find: " << *it << std::endl;
-        //
-        std::cout << "distance: " << std::distance(r.begin(), r.end()) << std::endl;
-        //
-        std::cout << "accumulate: " << std::accumulate(r.begin(), r.end(), 0) << std::endl;
-        //
-        for(auto value : range<unsigned int>(0, 9)){
-            std::cout << value << ' ';
-        }
-        std::cout << std::endl;
+        std::cout << "[case1]" << std::endl;
+        test(range<int>(-5, 10));
+        std::cout << "[case2]" << std::endl;
+        test(range<int>(10, -5));
     }
     //
     {
