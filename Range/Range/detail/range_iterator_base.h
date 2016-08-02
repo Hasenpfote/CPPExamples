@@ -10,6 +10,7 @@ template <typename T>
 struct range_iterator_base : public std::iterator<std::input_iterator_tag, T>
 {
     static_assert(std::is_integral<T>::value, "T must be a integer type.");
+    static_assert(!std::is_same<T, bool>::value, "bool type is not supported.");
 
 public:
     range_iterator_base() = default;
@@ -33,7 +34,7 @@ public:
 
     range_iterator_base operator ++ (int)
     {
-        range_iterator temp = *this;
+        range_iterator_base temp = *this;
         ++(*this);
         return temp;
     }
