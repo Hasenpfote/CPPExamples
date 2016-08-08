@@ -6,9 +6,10 @@
 
 using irange = example::range::range<int>;
 
-void func(const std::vector<irange>& ranges)
+std::vector<irange> RemoveOverlaps(const std::vector<irange>& ranges)
 {
     auto temp = ranges;
+    //
     std::sort(
         temp.begin(),
         temp.end(),
@@ -21,6 +22,7 @@ void func(const std::vector<irange>& ranges)
             return *lhs.end() < *rhs.end();
         }
     );
+    //
     temp.erase(
         std::unique(
                 temp.begin(),
@@ -36,10 +38,29 @@ void func(const std::vector<irange>& ranges)
             ),
         temp.end()
     );
-
-    for(auto& range : temp){
-        std::cout << *(range.begin()) << " - " << *(range.end()) << std::endl;
+    //
+    std::vector<irange> result;
+    result.reserve(temp.size());
+    for(auto it = temp.begin(); it != temp.end(); ++it){
+        auto b = *it->begin();
+        auto e = *it->end();
+        for(auto it2 = it + 1; it2 != temp.end(); ++it2){
+            if(*it2->end() <= e){
+                it = it2;
+            }
+            else
+            if(*it2->begin() <= e){
+                e = *it2->end();
+                it = it2;
+            }
+            else{
+                break;
+            }
+        }
+        result.emplace_back(b, e);
     }
+    result.shrink_to_fit();
+    return result;
 }
 
 void test(const example::range::range<int>& range)
@@ -91,18 +112,24 @@ void main()
     //
     {
         std::vector<irange> v;
-        v.push_back(irange(3,5));
-        v.push_back(irange(0,1));
-        v.push_back(irange(2,4));
-        v.push_back(irange(0,1));
-        v.push_back(irange(2,3));
-        v.push_back(irange(2,4));
+        v.emplace_back(4, 9);
+        v.emplace_back(0, 1);
+        //v.emplace_back(6, 2);
+        v.emplace_back(2, 4);
+        v.emplace_back(0, 3);
+        v.emplace_back(11,15);
+        v.emplace_back(3, 5);
+
         std::cout << "before" << std::endl;
         for(auto& r : v){
             std::cout << *(r.begin()) << " - " << *(r.end()) << std::endl;
         }
 
+        auto v2 = RemoveOverlaps(v);
+
         std::cout << "after" << std::endl;
-        func(v);
+        for(auto& r : v2){
+            std::cout << *(r.begin()) << " - " << *(r.end()) << std::endl;
+        }
     }
 }
