@@ -4,7 +4,7 @@
 #include <numeric>
 #include "range.h"
 
-using irange = example::range::range<int>;
+using irange = example::range::range<int, false>;
 
 std::vector<irange> RemoveOverlaps(const std::vector<irange>& ranges)
 {
@@ -108,6 +108,8 @@ void main()
         test(range<int>(-5, 10));
         std::cout << "[case2]" << std::endl;
         test(range<int>(10, -5));
+        std::cout << "[case3]" << std::endl;
+        test(range<int>(10, 11));
     }
     //
     {
@@ -131,5 +133,10 @@ void main()
         for(auto& r : v2){
             std::cout << *(r.begin()) << " - " << *(r.end()) << std::endl;
         }
+    }
+    {
+        irange r(0, 45);
+        auto b = r.begin();
+        std::cout << "accumulate: " << std::accumulate(b, r.end(), 0) << std::endl;
     }
 }
