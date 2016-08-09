@@ -54,6 +54,7 @@ public:
     {
         return iterator(first, AllowReverseOrder? ((last >= first)? +1 : -1) : +1);
     }
+
     iterator end() const
     {
         return iterator(last, AllowReverseOrder? ((last >= first)? +1 : -1) : +1);
