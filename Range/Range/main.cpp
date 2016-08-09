@@ -63,6 +63,64 @@ std::vector<irange> RemoveOverlaps(const std::vector<irange>& ranges)
     return result;
 }
 
+template <typename T>
+std::vector<example::range::range<T, false>> RemoveOverlaps2(std::vector<example::range::range<T, false>> ranges)
+{
+    using range_type = example::range::range<T, false>;
+    //
+    std::sort(
+        ranges.begin(),
+        ranges.end(),
+        [](const range_type& lhs, const range_type& rhs) -> bool
+        {
+            if(*lhs.begin() < *rhs.begin())
+                return true;
+            if(*lhs.begin() > *rhs.begin())
+                return false;
+            return *lhs.end() < *rhs.end();
+        }
+    );
+    //
+    ranges.erase(
+        std::unique(
+            ranges.begin(),
+            ranges.end(),
+            [](const range_type& lhs, const range_type& rhs) -> bool
+            {
+                if(*lhs.begin() != *rhs.begin())
+                    return false;
+                if(*lhs.end() != *rhs.end())
+                    return false;
+                return true;
+            }
+        ),
+        ranges.end()
+    );
+    //
+    std::vector<range_type> result;
+    result.reserve(ranges.size());
+    for(auto it = ranges.begin(); it != ranges.end(); ++it){
+        auto b = *it->begin();
+        auto e = *it->end();
+        for(auto it2 = it + 1; it2 != ranges.end(); ++it2){
+            if(*it2->end() <= e){
+                it = it2;
+            }
+            else
+                if(*it2->begin() <= e){
+                    e = *it2->end();
+                    it = it2;
+                }
+                else{
+                    break;
+                }
+        }
+        result.emplace_back(b, e);
+    }
+    result.shrink_to_fit();
+    return result;
+}
+
 void test(const example::range::range<int>& range)
 {
     std::cout << "Basic for loops:" << std::endl;
@@ -92,6 +150,15 @@ void test(const example::range::range<int>& range)
     std::cout << "distance: " << std::distance(range.begin(), range.end()) << std::endl;
     //
     std::cout << "accumulate: " << std::accumulate(range.begin(), range.end(), 0) << std::endl;
+}
+
+
+std::vector<irange> func(std::vector<irange> ranges)
+{
+    for(auto& r : ranges){
+        std::cout << *(r.begin()) << " - " << *(r.end()) << std::endl;
+    }
+    return std::move(ranges);
 }
 
 void main()
@@ -127,7 +194,7 @@ void main()
             std::cout << *(r.begin()) << " - " << *(r.end()) << std::endl;
         }
 
-        auto v2 = RemoveOverlaps(v);
+        auto v2 = RemoveOverlaps2(v);
 
         std::cout << "after" << std::endl;
         for(auto& r : v2){
@@ -138,5 +205,24 @@ void main()
         irange r(0, 45);
         auto b = r.begin();
         std::cout << "accumulate: " << std::accumulate(b, r.end(), 0) << std::endl;
+    }
+    {
+        std::vector<irange> v;
+        v.emplace_back(4, 9);
+        v.emplace_back(0, 1);
+        v.emplace_back(0, 3);
+        auto v2 = func(std::move(v));
+        std::cout << std::boolalpha << "empty: " << v.empty() << std::endl;
+        std::cout << std::boolalpha << "empty: " << v2.empty() << std::endl;
+    }
+    {
+        std::vector<range<char, false>> v;
+        v.emplace_back('a', 'f');
+        v.emplace_back('d', 'q');
+        v.emplace_back('p', 'z');
+        auto v2 = RemoveOverlaps2(std::move(v));
+        for(auto& r : v2){
+            std::cout << *(r.begin()) << " - " << *(r.end()) << std::endl;
+        }
     }
 }
