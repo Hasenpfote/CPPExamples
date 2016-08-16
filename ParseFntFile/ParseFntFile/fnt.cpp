@@ -6,114 +6,121 @@
 #include "fnt.h"
 
 namespace fnt{
+#if 0
+template <typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
+T GetValue(const std::string& source, const std::string& name, T default_value)
+{
+    std::smatch match;
+    if(std::regex_search(source, match, std::regex(name + R"(=([-]{0,1}[\d]+))")))
+        return static_cast<T>(std::stoi(match[1]));
+    return default_value;
+}
+
+template <>
+long GetValue(const std::string& source, const std::string& name, long default_value)
+{
+    std::smatch match;
+    if(std::regex_search(source, match, std::regex(name + R"(=([-]{0,1}[\d]+))")))
+        return std::stol(match[1]);
+    return default_value;
+}
+
+template <>
+bool GetValue(const std::string& source, const std::string& name, bool default_value)
+{
+    std::smatch match;
+    if(std::regex_search(source, match, std::regex(name + R"(=([-]{0,1}[\d]+))")))
+        return std::stoi(match[1]) > 0;
+    return default_value;
+}
+#endif
+
+static std::int32_t GetValue1i(const std::string& source, const std::string& name, std::int32_t default_value = 0)
+{
+    std::smatch match;
+    if(std::regex_search(source, match, std::regex(name + R"(=([-]{0,1}[\d]+))")))
+        return static_cast<std::int32_t>(std::stoi(match[1]));
+    return default_value;
+}
+
+static std::tuple<std::int32_t, std::int32_t>
+GetValue2i(const std::string& source, const std::string& name, const std::tuple<std::int32_t, std::int32_t>& default_value = { 0,0 })
+{
+    std::smatch match;
+    if(std::regex_search(source, match, std::regex(name + R"(=([-]{0,1}[\d]+),([-]{0,1}[\d]+))")))
+        return std::make_tuple(
+            static_cast<std::int32_t>(std::stoi(match[1])),
+            static_cast<std::int32_t>(std::stoi(match[2])));
+    return default_value;
+}
+
+static std::tuple<std::int32_t, std::int32_t, std::int32_t, std::int32_t>
+GetValue4i(const std::string& source, const std::string& name, const std::tuple<std::int32_t, std::int32_t, std::int32_t, std::int32_t>& default_value = { 0,0,0,0 })
+{
+    std::smatch match;
+    if(std::regex_search(source, match, std::regex(name + R"(=([-]{0,1}[\d]+),([-]{0,1}[\d]+),([-]{0,1}[\d]+),([-]{0,1}[\d]+))")))
+        return std::make_tuple(
+            static_cast<std::int32_t>(std::stoi(match[1])),
+            static_cast<std::int32_t>(std::stoi(match[2])),
+            static_cast<std::int32_t>(std::stoi(match[3])),
+            static_cast<std::int32_t>(std::stoi(match[4])));
+    return default_value;
+}
+
+static bool GetValue1b(const std::string& source, const std::string& name, bool default_value = false)
+{
+    std::smatch match;
+    if(std::regex_search(source, match, std::regex(name + R"(=([\d]))")))
+        return std::stoi(match[1]) > 0;
+    return default_value;
+}
+
+static std::string GetString(const std::string& source, const std::string& name)
+{
+    std::smatch match;
+    if(std::regex_search(source, match, std::regex(name + R"(=\"([\w|\s|\+|-]*)\")")))
+        return match[1];
+    return "";
+}
 
 void Info::Parse(const std::string& source)
 {
-    std::smatch match;
-    if(std::regex_search(source, match, std::regex(R"(face=\"([\w|\+|\s]+)\")"))){
-        face = match[1];
-    }
-    if(std::regex_search(source, match, std::regex(R"(size=([\d]+))"))){
-        size = std::stoi(match[1]);
-    }
-    if(std::regex_search(source, match, std::regex(R"(bold=([\d]+))"))){
-        bold = std::stoi(match[1]) > 0;
-    }
-    if(std::regex_search(source, match, std::regex(R"(italic=([\d]+))"))){
-        italic = std::stoi(match[1]) > 0;
-    }
-    if(std::regex_search(source, match, std::regex(R"(charset=\"([\w|-]*)\")"))){
-        charset = match[1];
-    }
-    if(std::regex_search(source, match, std::regex(R"(unicode=([\d]+))"))){
-        unicode = std::stoi(match[1]) > 0;
-    }
-    if(std::regex_search(source, match, std::regex(R"(stretchH=([\d]+))"))){
-        stretchH = std::stoi(match[1]);
-    }
-    if(std::regex_search(source, match, std::regex(R"(smooth=([\d]+))"))){
-        smooth = std::stoi(match[1]) > 0;
-    }
-    if(std::regex_search(source, match, std::regex(R"(aa=([\d]+))"))){
-        aa = std::stoi(match[1]) > 0;
-    }
-    if(std::regex_search(source, match, std::regex(R"(padding=([\d]+),([\d]+),([\d]+),([\d]+))"))) {
-        std::get<0>(padding) = std::stoi(match[1]);
-        std::get<1>(padding) = std::stoi(match[2]);
-        std::get<2>(padding) = std::stoi(match[3]);
-        std::get<3>(padding) = std::stoi(match[4]);
-    }
-    if(std::regex_search(source, match, std::regex(R"(spacing=([\d]+),([\d]+))"))){
-        std::get<0>(spacing) = std::stoi(match[1]);
-        std::get<1>(spacing) = std::stoi(match[2]);
-    }
+    face = GetString(source, "face");
+    size = GetValue1i(source, "size");
+    bold = GetValue1b(source, "bold");
+    italic = GetValue1b(source, "italic");
+    charset = GetString(source, "charset");
+    unicode = GetValue1b(source, "unicode");
+    stretchH = GetValue1i(source, "stretchH");
+    smooth = GetValue1b(source, "smooth");
+    aa = GetValue1b(source, "aa");
+    padding = GetValue4i(source, "padding");
+    spacing = GetValue2i(source, "spacing");
 }
 
 void Common::Parse(const std::string& source)
 {
-    std::smatch match;
-    if(std::regex_search(source, match, std::regex(R"(lineHeight=([\d]+))"))){
-        lineHeight = std::stoi(match[1]);
-    }
-    if(std::regex_search(source, match, std::regex(R"(base=([\d]+))"))){
-        base = std::stoi(match[1]);
-    }
-    if(std::regex_search(source, match, std::regex(R"(scaleW=([\d]+))"))){
-        scaleW = std::stoi(match[1]);
-    }
-    if(std::regex_search(source, match, std::regex(R"(scaleH=([\d]+))"))){
-        scaleH = std::stoi(match[1]);
-    }
-    if(std::regex_search(source, match, std::regex(R"(pages=([\d]+))"))){
-        pages = std::stoi(match[1]);
-    }
-    if(std::regex_search(source, match, std::regex(R"(packed=([\d]+))"))){
-        packed = std::stoi(match[1]);
-    }
+    lineHeight = GetValue1i(source, "lineHeight");
+    base = GetValue1i(source, "base");
+    scaleW = GetValue1i(source, "scaleW");
+    scaleH = GetValue1i(source, "scaleH");
+    pages = GetValue1i(source, "pages");
+    packed = GetValue1i(source, "packed");
 }
 
 void Character::Parse(const std::string& source)
 {
 #if 0
     // debug mode では異常に遅い.
-    static const std::regex x_re(R"(x=([\d]+))");
-    static const std::regex y_re(R"(y=([\d]+))");
-    static const std::regex width_re(R"(width=([\d]+))");
-    static const std::regex height_re(R"(height=([\d]+))");
-    static const std::regex xoffset_re(R"(xoffset=([-]{0,1}[\d]+))");
-    static const std::regex yoffset_re(R"(yoffset=([-]{0,1}[\d]+))");
-    static const std::regex xadvance_re(R"(xadvance=([\d]+))");
-    static const std::regex page_re(R"(page=([\d]+))");
-    static const std::regex chnl_re(R"(chnl=([\d]+))");
-
-    std::smatch match;
-    if(std::regex_search(source, match, x_re)){
-        x = std::stoi(match[1]);
-    }
-    if(std::regex_search(source, match, y_re)){
-        y = std::stoi(match[1]);
-    }
-    if(std::regex_search(source, match, width_re)){
-        width = std::stoi(match[1]);
-    }
-    if(std::regex_search(source, match, height_re)){
-        height = std::stoi(match[1]);
-    }
-    if(std::regex_search(source, match, xoffset_re)){
-        xoffset = std::stoi(match[1]);
-    }
-    if(std::regex_search(source, match, yoffset_re)){
-        yoffset = std::stoi(match[1]);
-    }
-    if(std::regex_search(source, match, xadvance_re)){
-        xadvance = std::stoi(match[1]);
-    }
-    if(std::regex_search(source, match, page_re)){
-        page = std::stoi(match[1]);
-    }
-    if(std::regex_search(source, match, chnl_re)){
-        chnl = std::stoi(match[1]);
-    }
+    x = GetValue1i(source, "x");
+    y = GetValue1i(source, "y");
+    width = GetValue1i(source, "width");
+    height = GetValue1i(source, "height");
+    xoffset = GetValue1i(source, "xoffset");
+    yoffset = GetValue1i(source, "yoffset");
+    xadvance = GetValue1i(source, "xadvance");
+    page = GetValue1i(source, "page");
+    chnl = GetValue1i(source, "chnl");
 #else
     static const std::string x_tag = "x=";
     static const std::string y_tag = "y=";
