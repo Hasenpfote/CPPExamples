@@ -9,7 +9,7 @@ static std::u16string utf8_to_utf16(const std::string& s)
 {
 #if _MSC_VER <= 1900
     //  Workaround for missing char16_t/char32_t instantiations in MSVC2015.
-    std::wstring_convert<std::codecvt_utf8_utf16<std::int16_t>, std::int16_t> conv;
+    std::wstring_convert<std::codecvt_utf8_utf16<std::uint16_t>, std::uint16_t> conv;
     auto temp = conv.from_bytes(s);
     return std::u16string(temp.cbegin(), temp.cend());
 #else
@@ -23,8 +23,8 @@ static std::string utf16_to_utf8(const std::u16string& s)
 {
 #if _MSC_VER <= 1900
     //  Workaround for missing char16_t/char32_t instantiations in MSVC2015.
-    std::wstring_convert<std::codecvt_utf8_utf16<std::int16_t>, std::int16_t> conv;
-    auto p = reinterpret_cast<const std::int16_t*>(s.data());
+    std::wstring_convert<std::codecvt_utf8_utf16<std::uint16_t>, std::uint16_t> conv;
+    auto p = reinterpret_cast<const std::uint16_t*>(s.data());
     return conv.to_bytes(p, p + s.length());
 #else
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> conv;
@@ -37,7 +37,7 @@ static std::u32string utf8_to_utf32(const std::string& s)
 {
 #if _MSC_VER <= 1900
     //  Workaround for missing char16_t/char32_t instantiations in MSVC2015.
-    std::wstring_convert<std::codecvt_utf8<std::int32_t>, std::int32_t> conv;
+    std::wstring_convert<std::codecvt_utf8<std::uint32_t>, std::uint32_t> conv;
     auto temp = conv.from_bytes(s);
     return std::u32string(temp.cbegin(), temp.cend());
 #else
@@ -51,8 +51,8 @@ static std::string utf32_to_utf8(const std::u32string& s)
 {
 #if _MSC_VER <= 1900
     //  Workaround for missing char16_t/char32_t instantiations in MSVC2015.
-    std::wstring_convert<std::codecvt_utf8<std::int32_t>, std::int32_t> conv;
-    auto p = reinterpret_cast<const std::int32_t*>(s.data());
+    std::wstring_convert<std::codecvt_utf8<std::uint32_t>, std::uint32_t> conv;
+    auto p = reinterpret_cast<const std::uint32_t*>(s.data());
     return conv.to_bytes(p, p + s.length());
 #else
     std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> conv;
@@ -66,7 +66,7 @@ static std::u32string utf16_to_utf32_le(const std::u16string &s)
 #if _MSC_VER <= 1900
     //  Workaround for missing char16_t/char32_t instantiations in MSVC2015.
     const char16_t* data = s.c_str();
-    std::wstring_convert<std::codecvt_utf16<std::int32_t, 0x10ffff, std::codecvt_mode::little_endian>, std::int32_t> conv;
+    std::wstring_convert<std::codecvt_utf16<std::uint32_t, 0x10ffff, std::codecvt_mode::little_endian>, std::uint32_t> conv;
     auto bytes = conv.from_bytes(reinterpret_cast<const char*>(data), reinterpret_cast<const char*>(data + s.length()));
     return std::u32string(bytes.cbegin(), bytes.cend());
 #else
@@ -82,7 +82,7 @@ static std::u32string utf16_to_utf32_be(const std::u16string &s)
 #if _MSC_VER <= 1900
     //  Workaround for missing char16_t/char32_t instantiations in MSVC2015.
     const char16_t* data = s.c_str();
-    std::wstring_convert<std::codecvt_utf16<std::int32_t, 0x10ffff>, std::int32_t> conv;
+    std::wstring_convert<std::codecvt_utf16<std::uint32_t, 0x10ffff>, std::uint32_t> conv;
     auto bytes = conv.from_bytes(reinterpret_cast<const char*>(data), reinterpret_cast<const char*>(data + s.length()));
     return std::u32string(bytes.cbegin(), bytes.cend());
 #else
@@ -97,8 +97,8 @@ static std::u16string utf32_to_utf16_le(const std::u32string& s)
 {
     //  Workaround for missing char16_t/char32_t instantiations in MSVC2015.
 #if _MSC_VER <= 1900
-    std::wstring_convert<std::codecvt_utf16<std::int32_t, 0x10ffff, std::codecvt_mode::little_endian>, std::int32_t> conv;
-    auto p = reinterpret_cast<const std::int32_t*>(s.data());
+    std::wstring_convert<std::codecvt_utf16<std::uint32_t, 0x10ffff, std::codecvt_mode::little_endian>, std::uint32_t> conv;
+    auto p = reinterpret_cast<const std::uint32_t*>(s.data());
     auto bytes = conv.to_bytes(p, p + s.length());
     return std::u16string(reinterpret_cast<const char16_t*>(bytes.c_str()), bytes.length() / sizeof(char16_t));
 #else
@@ -113,8 +113,8 @@ static std::u16string utf32_to_utf16_be(const std::u32string& s)
 {
     //  Workaround for missing char16_t/char32_t instantiations in MSVC2015.
 #if _MSC_VER <= 1900
-    std::wstring_convert<std::codecvt_utf16<std::int32_t, 0x10ffff>, std::int32_t> conv;
-    auto p = reinterpret_cast<const std::int32_t*>(s.data());
+    std::wstring_convert<std::codecvt_utf16<std::uint32_t, 0x10ffff>, std::uint32_t> conv;
+    auto p = reinterpret_cast<const std::uint32_t*>(s.data());
     auto bytes = conv.to_bytes(p, p + s.length());
     return std::u16string(reinterpret_cast<const char16_t*>(bytes.c_str()), bytes.length() / sizeof(char16_t));
 #else
@@ -129,8 +129,8 @@ static std::string ucs2_to_utf8(const std::u16string& s)
 {
 #if _MSC_VER <= 1900
     //  Workaround for missing char16_t/char32_t instantiations in MSVC2015.
-    std::wstring_convert<std::codecvt_utf8<std::int16_t>, std::int16_t> conv;
-    auto p = reinterpret_cast<const std::int16_t*>(s.data());
+    std::wstring_convert<std::codecvt_utf8<std::uint16_t>, std::uint16_t> conv;
+    auto p = reinterpret_cast<const std::uint16_t*>(s.data());
     return conv.to_bytes(p, p + s.length());
 #else
     std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> conv;
@@ -143,7 +143,7 @@ static std::u16string utf8_to_ucs2(const std::string& s)
 {
 #if _MSC_VER <= 1900
     //  Workaround for missing char16_t/char32_t instantiations in MSVC2015.
-    std::wstring_convert<std::codecvt_utf8<std::int16_t>, std::int16_t> conv;
+    std::wstring_convert<std::codecvt_utf8<std::uint16_t>, std::uint16_t> conv;
     auto temp = conv.from_bytes(s);
     return std::u16string(temp.cbegin(), temp.cend());
 #else
@@ -151,6 +151,41 @@ static std::u16string utf8_to_ucs2(const std::string& s)
     return conv.from_bytes(s);
 #endif
 }
+
+/*
+from_bytes
+Member in converts from UTF-16 to its fixed-width character equivalent.
+
+to_bytes
+Member out converts from the fixed-width wide character encoding to UTF-16.
+*/
+
+// ucs2 to utf16(little-endian)
+static std::u16string ucs2_to_utf16_le(const std::u16string &s)
+{
+#if _MSC_VER <= 1900
+    //  Workaround for missing char16_t/char32_t instantiations in MSVC2015.
+    std::wstring_convert<std::codecvt_utf16<std::uint16_t, 0x10ffff, std::codecvt_mode::little_endian>, std::uint16_t> conv;
+    auto p = reinterpret_cast<const std::uint16_t*>(s.data());
+    auto bytes = conv.to_bytes(p, p + s.length());
+    return std::u16string(reinterpret_cast<const char16_t*>(bytes.c_str()), bytes.length() / sizeof(char16_t));
+#else
+#endif
+}
+
+// utf16 to ucs2(little-endian)
+static std::u16string utf16_to_ucs2_le(const std::u16string &s)
+{
+#if _MSC_VER <= 1900
+    //  Workaround for missing char16_t/char32_t instantiations in MSVC2015.
+    const char16_t* data = s.c_str();
+    std::wstring_convert<std::codecvt_utf16<std::uint16_t, 0x10ffff, std::codecvt_mode::little_endian>, std::uint16_t> conv;
+    auto bytes = conv.from_bytes(reinterpret_cast<const char*>(data), reinterpret_cast<const char*>(data + s.length()));
+    return std::u16string(bytes.cbegin(), bytes.cend());
+#else
+#endif
+}
+
 
 class TestString
 {
@@ -183,19 +218,32 @@ void Test(const TestString& s)
         std::cout << "Failed to convert: utf32_to_utf16_le" << std::endl;
     // ucs2 <-> utf8
     try{
+        auto c = ucs2_to_utf8(s.utf16);
         if(ucs2_to_utf8(s.utf16) != s.utf8)
             std::cout << "Failed to convert: ucs2_to_utf8" << std::endl;
-    }catch (const std::range_error&){
+    }catch(const std::range_error&){
         std::cout << "range_error: ucs2_to_utf8" << std::endl;
     }
     try{
         if(utf8_to_ucs2(s.utf8) != s.utf16)
             std::cout << "Failed to convert: utf8_to_ucs2" << std::endl;
-    }
-    catch(const std::range_error&){
+    }catch(const std::range_error&){
         std::cout << "range_error: utf8_to_ucs2" << std::endl;
     }
     // ucs2 <-> utf16
+    try{
+        if(ucs2_to_utf16_le(s.utf16) != s.utf16)
+            std::cout << "Failed to convert: ucs2_to_utf16_le" << std::endl;
+    }catch(const std::range_error&){
+        std::cout << "range_error: ucs2_to_utf16_le" << std::endl;
+    }
+    try{
+        if(utf16_to_ucs2_le(s.utf16) != s.utf16)
+            std::cout << "Failed to convert: utf16_to_ucs2_le" << std::endl;
+    }
+    catch(const std::range_error&){
+        std::cout << "range_error: utf16_to_ucs2_le" << std::endl;
+    }
 }
 
 void main()
@@ -204,6 +252,12 @@ void main()
 
     std::cout << "_MSC_VER=" << _MSC_VER << std::endl;
     std::cout << "_MSC_FULL_VER=" << _MSC_FULL_VER << std::endl;
+    std::cout << "char16_t is signed? " << std::boolalpha << std::is_signed<char16_t>::value << std::endl;
+    std::cout << "char16_t size = " << sizeof(char16_t) << std::endl;
+    std::cout << "char32_t is signed? " << std::boolalpha << std::is_signed<char32_t>::value << std::endl;
+    std::cout << "char32_t size = " << sizeof(char32_t) << std::endl;
+    std::cout << "wchar_t is signed? " << std::boolalpha << std::is_signed<wchar_t>::value << std::endl;
+    std::cout << "wchar_t size = " << sizeof(wchar_t) << std::endl;
 
     std::vector<TestString> strings = {
         //TestString(u8"abcABCあいうえお", u"abcABCあいうえお", U"abcABCあいうえお"),
@@ -215,10 +269,15 @@ void main()
         //TestString("\x69\x6A", u"\x0069\x006A", U"\x00000069\x0000006A"),
         //TestString("\xCE\xA9", u"\x03A9", U"\x000003A9"),
         //TestString("\xE2\x84\xA6", u"\x2126", U"\x00002126"),
-        TestString("\xF0\x9D\x93\x83", u"\xD835\xDCC3", U"\x0001D4C3")
+        TestString("\xF0\x9D\x93\x83", u"\xD835\xDCC3", U"\x0001D4C3")  // x
     };
     for(auto s : strings){
-        std::cout << "* " << s.utf8 << "" << std::endl;
+        //std::cout << "* " << s.utf8 << "" << std::endl;
+        std::cout << ">>> " << std::endl;
+        for(auto c : s.utf8){
+            std::cout << std::hex << std::showbase << (((unsigned int)c) & 0x000000ff) << " ";
+        }
+        std::cout << std::endl;
         Test(s);
     }
 }
