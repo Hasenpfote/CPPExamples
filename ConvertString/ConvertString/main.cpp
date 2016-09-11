@@ -13,7 +13,7 @@ static constexpr std::codecvt_mode mode = std::codecvt_mode::little_endian;
 // gcc7.0.0 ... ---
 // gcc6.1.0 ... ---
 // gcc5.3.0 ... ---
-// gcc5.2.0 ... need endian.
+// gcc5.2.0 ... need endianness.
 // gcc5.1.0 ... ---
 // clang4.0.0 . ---
 static std::u16string utf8_to_utf16(const std::string& s)
@@ -90,12 +90,12 @@ static std::string utf32_to_utf8(const std::u32string& s)
 }
 
 // utf16 to utf32
-// gcc7.0.0 ... need endian.
-// gcc6.1.0 ... need endian.
-// gcc5.3.0 ... need endian.
-// gcc5.2.0 ... need endian.
-// gcc5.1.0 ... need endian.
-// clang4.0.0 . need endian.
+// gcc7.0.0 ... need endianness.
+// gcc6.1.0 ... need endianness.
+// gcc5.3.0 ... need endianness.
+// gcc5.2.0 ... need endianness.
+// gcc5.1.0 ... need endianness.
+// clang4.0.0 . need endianness.
 static std::u32string utf16_to_utf32(const std::u16string &s)
 {
 #if defined(_MSC_VER) && (_MSC_VER <= 1900)
@@ -112,15 +112,16 @@ static std::u32string utf16_to_utf32(const std::u16string &s)
 }
 
 // utf32 to utf16
-// gcc7.0.0 ... need endian.
-// gcc6.1.0 ... need endian.
-// gcc5.3.0 ... need endian.
-// gcc5.2.0 ... need endian.
+// gcc7.0.0 ... need endianness.
+// gcc6.1.0 ... need endianness.
+// gcc5.3.0 ... need endianness.
+// gcc5.2.0 ... need endianness.
 // gcc5.1.0 ... ---
-// clang4.0.0 . need endian.
+// clang4.0.0 . need endianness.
 static std::u16string utf32_to_utf16(const std::u32string& s)
 {
 #if defined(_MSC_VER) && (_MSC_VER <= 1900)
+    //  Workaround for missing char16_t/char32_t instantiations in MSVC2015.
     std::wstring_convert<std::codecvt_utf16<std::uint32_t, 0x10ffff, mode>, std::uint32_t> conv;
     auto p = reinterpret_cast<const std::uint32_t*>(s.c_str());
     auto bytes = conv.to_bytes(p, p + s.length());
@@ -154,9 +155,9 @@ static std::string ucs2_to_utf8(const std::u16string& s)
 
 // utf8 to ucs2
 // gcc7.0.0 ... ---
-// gcc6.1.0 ... need endian.
-// gcc5.3.0 ... need endian.
-// gcc5.2.0 ... need endian.
+// gcc6.1.0 ... need endianness.
+// gcc5.3.0 ... need endianness.
+// gcc5.2.0 ... need endianness.
 // gcc5.1.0 ... ---
 // clang4.0.0 . ---
 static std::u16string utf8_to_ucs2(const std::string& s)
@@ -173,12 +174,12 @@ static std::u16string utf8_to_ucs2(const std::string& s)
 }
 
 // ucs2 to utf16
-// gcc7.0.0 ... need endian.
-// gcc6.1.0 ... need endian.
-// gcc5.3.0 ... need endian.
-// gcc5.2.0 ... need endian.
-// gcc5.1.0 ... need endian.
-// clang4.0.0 . need endian.
+// gcc7.0.0 ... need endianness.
+// gcc6.1.0 ... need endianness.
+// gcc5.3.0 ... need endianness.
+// gcc5.2.0 ... need endianness.
+// gcc5.1.0 ... need endianness.
+// clang4.0.0 . need endianness.
 static std::u16string ucs2_to_utf16(const std::u16string &s)
 {
 #if defined(_MSC_VER) && (_MSC_VER <= 1900)
@@ -209,12 +210,12 @@ static std::u16string ucs2_to_utf16(const std::u16string &s)
 }
 
 // utf16 to ucs2
-// gcc7.0.0 ... need endian.
-// gcc6.1.0 ... need endian.
-// gcc5.3.0 ... need endian.
-// gcc5.2.0 ... need endian.
-// gcc5.1.0 ... need endian.
-// clang4.0.0 . need endian.
+// gcc7.0.0 ... need endianness.
+// gcc6.1.0 ... need endianness.
+// gcc5.3.0 ... need endianness.
+// gcc5.2.0 ... need endianness.
+// gcc5.1.0 ... need endianness.
+// clang4.0.0 . need endianness.
 static std::u16string utf16_to_ucs2(const std::u16string &s)
 {
 #if defined(_MSC_VER) && (_MSC_VER <= 1900)
@@ -259,48 +260,48 @@ public:
 void Test(const TestItem& item)
 {
     // u8 <-> u16
-    if (utf8_to_utf16(item.utf8) != item.utf16)
+    if(utf8_to_utf16(item.utf8) != item.utf16)
         std::cout << "Failed to convert: utf8_to_utf16" << std::endl;
-    if (utf16_to_utf8(item.utf16) != item.utf8)
+    if(utf16_to_utf8(item.utf16) != item.utf8)
         std::cout << "Failed to convert: utf16_to_utf8" << std::endl;
     // u8 <-> u32
-    if (utf8_to_utf32(item.utf8) != item.utf32)
+    if(utf8_to_utf32(item.utf8) != item.utf32)
         std::cout << "Failed to convert: utf8_to_utf32" << std::endl;
-    if (utf32_to_utf8(item.utf32) != item.utf8)
+    if(utf32_to_utf8(item.utf32) != item.utf8)
         std::cout << "Failed to convert: utf32_to_utf8" << std::endl;
     // u16 <-> u32
-    if (utf16_to_utf32(item.utf16) != item.utf32)
+    if(utf16_to_utf32(item.utf16) != item.utf32)
         std::cout << "Failed to convert: utf16_to_utf32" << std::endl;
-    if (utf32_to_utf16(item.utf32) != item.utf16)
+    if(utf32_to_utf16(item.utf32) != item.utf16)
         std::cout << "Failed to convert: utf32_to_utf16" << std::endl;
     // ucs2 <-> utf8
-    try {
-        if (ucs2_to_utf8(item.utf16) != item.utf8)
+    try{
+        if(ucs2_to_utf8(item.utf16) != item.utf8)
             std::cout << "Failed to convert: ucs2_to_utf8" << std::endl;
     }
-    catch (const std::range_error&) {
+    catch(const std::range_error&){
         std::cout << "range_error: ucs2_to_utf8" << std::endl;
     }
-    try {
-        if (utf8_to_ucs2(item.utf8) != item.utf16)
+    try{
+        if(utf8_to_ucs2(item.utf8) != item.utf16)
             std::cout << "Failed to convert: utf8_to_ucs2" << std::endl;
     }
-    catch (const std::range_error&) {
+    catch(const std::range_error&){
         std::cout << "range_error: utf8_to_ucs2" << std::endl;
     }
     // ucs2 <-> utf16
-    try {
-        if (ucs2_to_utf16(item.utf16) != item.utf16)
+    try{
+        if(ucs2_to_utf16(item.utf16) != item.utf16)
             std::cout << "Failed to convert: ucs2_to_utf16" << std::endl;
     }
-    catch (const std::range_error&) {
+    catch(const std::range_error&){
         std::cout << "range_error: ucs2_to_utf16" << std::endl;
     }
-    try {
-        if (utf16_to_ucs2(item.utf16) != item.utf16)
+    try{
+        if(utf16_to_ucs2(item.utf16) != item.utf16)
             std::cout << "Failed to convert: utf16_to_ucs2" << std::endl;
     }
-    catch (const std::range_error&) {
+    catch (const std::range_error&){
         std::cout << "range_error: utf16_to_ucs2" << std::endl;
     }
 }
@@ -317,7 +318,7 @@ int main(void)
     std::cout << "_MSC_VER=" << _MSC_VER << std::endl;
     std::cout << "_MSC_FULL_VER=" << _MSC_FULL_VER << std::endl;
 #endif
-    std::cout << "is littele endian? " << std::boolalpha << isLittleEndianSystem() << std::endl;
+    std::cout << "is littele-endian? " << std::boolalpha << isLittleEndianSystem() << std::endl;
     std::cout << "char16_t is signed? " << std::boolalpha << std::is_signed<char16_t>::value << std::endl;
     std::cout << "char16_t size = " << sizeof(char16_t) << std::endl;
     std::cout << "char32_t is signed? " << std::boolalpha << std::is_signed<char32_t>::value << std::endl;
@@ -326,7 +327,7 @@ int main(void)
     std::cout << "wchar_t size = " << sizeof(wchar_t) << std::endl;
 
     std::vector<TestItem> items = {
-        TestItem(u8"abcABCあいうえお", u"abcABCあいうえお", U"abcABCあいうえお"),			// 
+        TestItem(u8"abcABCあいうえお", u"abcABCあいうえお", U"abcABCあいうえお"),
         TestItem("\x61", u"\x0061", U"\x00000061"),								// a 
         TestItem("\xEF\xBD\x81", u"\xFF41", U"\x0000FF41"),						// ａ 
         TestItem("\xC4\x8D", u"\x010D", U"\x010D"),								// č̌
@@ -337,7 +338,7 @@ int main(void)
         TestItem("\xE2\x84\xA6", u"\x2126", U"\x00002126"),						// Ω 
         TestItem("\xF0\x9D\x93\x83", u"\xD835\xDCC3", U"\x0001D4C3")			// 𝓃 
     };
-    for (auto item : items) {
+    for(auto item : items){
         std::cout << "* " << item.utf8 << "" << std::endl;
         Test(item);
     }
