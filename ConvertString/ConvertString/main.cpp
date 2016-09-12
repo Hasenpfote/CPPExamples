@@ -5,6 +5,7 @@
 #include <iostream>
 #include <assert.h>
 #include <vector>
+#include "unicode.h"
 
 static constexpr std::codecvt_mode mode = std::codecvt_mode::little_endian;
 //static constexpr std::codecvt_mode mode = (std::codecvt_mode)0;
@@ -274,7 +275,56 @@ void Test(const TestItem& item)
         if(utf16_to_ucs2(item.utf16) != item.utf16)
             std::cout << "Failed to convert: utf16_to_ucs2" << std::endl;
     }
-    catch (const std::range_error&){
+    catch(const std::range_error&){
+        std::cout << "range_error: utf16_to_ucs2" << std::endl;
+    }
+}
+
+void Test2(const TestItem& item, bool is_big_endian = true)
+{
+    // u8 <-> u16
+    if(example::utf8_to_utf16(item.utf8) != item.utf16)
+        std::cout << "Failed to convert: utf8_to_utf16" << std::endl;
+    if(example::utf16_to_utf8(item.utf16) != item.utf8)
+        std::cout << "Failed to convert: utf16_to_utf8" << std::endl;
+    // u8 <-> u32
+    if(example::utf8_to_utf32(item.utf8) != item.utf32)
+        std::cout << "Failed to convert: utf8_to_utf32" << std::endl;
+    if(example::utf32_to_utf8(item.utf32) != item.utf8)
+        std::cout << "Failed to convert: utf32_to_utf8" << std::endl;
+    // u16 <-> u32
+    if(example::utf16_to_utf32(item.utf16, is_big_endian) != item.utf32)
+        std::cout << "Failed to convert: utf16_to_utf32" << std::endl;
+    if(example::utf32_to_utf16(item.utf32, is_big_endian) != item.utf16)
+        std::cout << "Failed to convert: utf32_to_utf16" << std::endl;
+    // ucs2 <-> utf8
+    try{
+        if(example::ucs2_to_utf8(item.utf16) != item.utf8)
+            std::cout << "Failed to convert: ucs2_to_utf8" << std::endl;
+    }
+    catch(const std::range_error&){
+        std::cout << "range_error: ucs2_to_utf8" << std::endl;
+    }
+    try{
+        if(example::utf8_to_ucs2(item.utf8) != item.utf16)
+            std::cout << "Failed to convert: utf8_to_ucs2" << std::endl;
+    }
+    catch(const std::range_error&){
+        std::cout << "range_error: utf8_to_ucs2" << std::endl;
+    }
+    // ucs2 <-> utf16
+    try{
+        if(example::ucs2_to_utf16(item.utf16, is_big_endian) != item.utf16)
+            std::cout << "Failed to convert: ucs2_to_utf16" << std::endl;
+    }
+    catch(const std::range_error&){
+        std::cout << "range_error: ucs2_to_utf16" << std::endl;
+    }
+    try{
+        if(example::utf16_to_ucs2(item.utf16, is_big_endian) != item.utf16)
+            std::cout << "Failed to convert: utf16_to_ucs2" << std::endl;
+    }
+    catch(const std::range_error&){
         std::cout << "range_error: utf16_to_ucs2" << std::endl;
     }
 }
@@ -313,7 +363,8 @@ int main(void)
     };
     for(auto item : items){
         std::cout << "* " << item.utf8 << "" << std::endl;
-        Test(item);
+        //Test(item);
+        Test2(item, false);
     }
     return 0;
 }
