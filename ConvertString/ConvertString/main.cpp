@@ -189,23 +189,9 @@ static std::u16string ucs2_to_utf16(const std::u16string &s)
     auto bytes = conv.to_bytes(p, p + s.length());
     return std::u16string(reinterpret_cast<const char16_t*>(bytes.c_str()), bytes.length() / sizeof(char16_t));
 #else
-#if 1
     std::wstring_convert<std::codecvt_utf16<char16_t, 0x10ffff, mode>, char16_t> conv;
     auto bytes = conv.to_bytes(s);
     return std::u16string(reinterpret_cast<const char16_t*>(bytes.c_str()), bytes.length() / sizeof(char16_t));
-#else
-    std::wstring_convert<std::codecvt_utf16<char16_t>, char16_t> convert;
-    std::string bytes = convert.to_bytes(s);
-
-    std::u16string result;
-    result.reserve(bytes.size() / 2);
-
-    for (size_t i = 0; i < bytes.size(); i += 2) {
-        result.push_back(static_cast<char16_t>(static_cast<unsigned char>(bytes[i]) * 256 + static_cast<unsigned char>(bytes[i + 1])));
-    }
-
-    return result;
-#endif
 #endif
 }
 
@@ -225,23 +211,10 @@ static std::u16string utf16_to_ucs2(const std::u16string &s)
     auto bytes = conv.from_bytes(reinterpret_cast<const char*>(data), reinterpret_cast<const char*>(data + s.length()));
     return std::u16string(bytes.cbegin(), bytes.cend());
 #else
-#if 1
     std::wstring_convert<std::codecvt_utf16<char16_t, 0x10ffff, mode>, char16_t> conv;
     const char16_t* data = s.c_str();
     auto temp = conv.from_bytes(reinterpret_cast<const char*>(data), reinterpret_cast<const char*>(data + s.length()));
     return std::u16string(temp.cbegin(), temp.cend());
-#else
-    std::string bytes;
-    bytes.reserve(s.size() * 2);
-
-    for (const char16_t c : s) {
-        bytes.push_back(static_cast<char>(c / 256));
-        bytes.push_back(static_cast<char>(c % 256));
-    }
-
-    std::wstring_convert<std::codecvt_utf16<char16_t>, char16_t> convert;
-    return convert.from_bytes(bytes);
-#endif
 #endif
 }
 
