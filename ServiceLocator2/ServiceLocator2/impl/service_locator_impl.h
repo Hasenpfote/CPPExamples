@@ -20,8 +20,8 @@ void ServiceLocator::UnregisterService()
     std::lock_guard<std::mutex> lg(m);
 #endif
     static_assert(std::is_base_of<IService, T>::value == true, "T must be derived from IService.");
-    auto& it = service.find(typeid(T));
-    if(it != service.end()){
+    std::unordered_map<std::type_index, std::shared_ptr<IService>>::const_iterator it = service.find(typeid(T));
+    if(it != service.cend()){
         service.erase(it);
     }
 }
@@ -33,7 +33,7 @@ std::weak_ptr<T> ServiceLocator::GetService() const
     std::lock_guard<std::mutex> lg(m);
 #endif
     static_assert(std::is_base_of<IService, T>::value == true, "T must be derived from IService.");
-    auto& it = service.find(typeid(T));
+    std::unordered_map<std::type_index, std::shared_ptr<IService>>::const_iterator it = service.find(typeid(T));
     if(it != service.cend()){
         return std::dynamic_pointer_cast<T>(it->second);
     }

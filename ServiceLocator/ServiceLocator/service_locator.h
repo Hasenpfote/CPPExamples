@@ -34,8 +34,12 @@ public:
     template<typename T>
     void UnregisterService()
     {
-        auto& it = service.find(typeid(T).name());
-        if(it != service.end()){
+#ifndef ENABLE_TYPE_TEST
+        std::unordered_map<std::string, std::shared_ptr<IService>>::const_iterator it = service.find(typeid(T).name());
+#else
+        std::unordered_map<std::string, std::shared_ptr<void>>::const_iterator it = service.find(typeid(T).name());
+#endif
+        if(it != service.cend()){
             service.erase(it);
         }
     }
@@ -43,7 +47,11 @@ public:
     template<typename T>
     std::weak_ptr<T> GetService() const
     {
-        auto& it = service.find(typeid(T).name());
+#ifndef ENABLE_TYPE_TEST
+        std::unordered_map<std::string, std::shared_ptr<IService>>::const_iterator it = service.find(typeid(T).name());
+#else
+        std::unordered_map<std::string, std::shared_ptr<void>>::const_iterator it = service.find(typeid(T).name());
+#endif
         if(it != service.cend()){
 #ifndef ENABLE_TYPE_TEST
             return std::dynamic_pointer_cast<T>(it->second);
