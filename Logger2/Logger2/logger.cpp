@@ -81,7 +81,7 @@ void Logger::Impl::AddAppender(const std::type_index& index, const std::shared_p
 void Logger::Impl::RemoveAppender(const std::type_index& index)
 {
     std::lock_guard<std::mutex> lg(m);
-    std::unordered_map<std::type_index, std::shared_ptr<IAppender>>::const_iterator it = appender.find(index);
+    decltype(appender)::const_iterator it = appender.find(index);
     if(it != appender.cend()){
         appender.erase(it);
     }
