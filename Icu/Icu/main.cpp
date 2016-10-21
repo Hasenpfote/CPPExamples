@@ -5,7 +5,7 @@
 #include <unicode/ucnv.h>
 #include <unicode/brkiter.h>
 
-void disp(const UnicodeString& s)
+void disp(const icu::UnicodeString& s)
 {
     std::cout << std::dec << "length = " << s.length() << std::endl;
     for(std::int32_t i = 0; i < s.length(); i++){
@@ -13,12 +13,14 @@ void disp(const UnicodeString& s)
     }
 }
 
-void disp_line_breaks(const UnicodeString& s, const Locale& locale, UErrorCode& status)
+void disp_line_breaks(const icu::UnicodeString& s, const icu::Locale& locale, UErrorCode& status)
 {
-    auto bi = std::unique_ptr<icu_57::BreakIterator>(BreakIterator::createLineInstance(locale, status));
+    using namespace icu;
+
+    auto bi = std::unique_ptr<BreakIterator>(BreakIterator::createLineInstance(locale, status));
     bi->setText(s);
     auto p = bi->first();
-    while (p != BreakIterator::DONE) {
+    while(p != BreakIterator::DONE){
         std::cout << std::dec << "Boundary at position " << p << " (" << bi->getRuleStatus() << ")" << std::endl;
         p = bi->next();
     }
@@ -51,17 +53,24 @@ void disp_chunks(const std::u16string& u16)
     }
 }
 
-std::vector<std::tuple<std::int32_t, bool>>
+using LineBreak = std::tuple<std::size_t, bool>;
+
+std::vector<LineBreak>
 find_line_breaks(const std::u16string& u16)
 {
     using namespace icu;
 
-    UnicodeString s = UnicodeString((const char*)u16.c_str(), u16.size() * sizeof(char16_t), "UTF-16LE");
     UErrorCode status = U_ZERO_ERROR;
-    auto bi = std::unique_ptr<BreakIterator>(BreakIterator::createLineInstance(Locale::getUS(), status));
+    //auto bi = std::unique_ptr<BreakIterator>(BreakIterator::createLineInstance(Locale::getUS(), status));
+    //auto bi = std::unique_ptr<BreakIterator>(BreakIterator::createLineInstance(Locale::getJapanese(), status));
+    auto bi = std::unique_ptr<BreakIterator>(BreakIterator::createLineInstance(Locale::getDefault(), status));
+    //auto bi = std::unique_ptr<BreakIterator>(BreakIterator::createSentenceInstance(Locale::getDefault(), status));
+    //auto bi = std::unique_ptr<BreakIterator>(BreakIterator::createSentenceInstance(Locale::getUS(), status));
+
+    UnicodeString s = UnicodeString((const char*)u16.c_str(), u16.size() * sizeof(char16_t), "UTF-16LE");
     bi->setText(s);
+    std::vector<LineBreak> result;
     auto p = bi->first();
-    std::vector<std::tuple<std::int32_t, bool>> result;
     while(p != BreakIterator::DONE){
         result.emplace_back(p, (bi->getRuleStatus() != UBRK_LINE_SOFT));
         p = bi->next();
@@ -97,7 +106,7 @@ void func(const std::u16string& u16, std::size_t width)
         std::cout << std::dec << "[" << line << "] [" << s_pos << ", " << e_pos << ") len=" << chunk.length() << std::endl;
         line++;
 #if 1
-        UnicodeString s = UnicodeString((const char*)chunk.c_str(), chunk.size() * sizeof(char16_t), "UTF-16LE");
+        auto s = icu::UnicodeString((const char*)chunk.c_str(), chunk.size() * sizeof(char16_t), "UTF-16LE");
         std::string u8;
         s.toUTF8String(u8);
         std::cout << u8 << std::endl;
@@ -107,8 +116,14 @@ void func(const std::u16string& u16, std::size_t width)
 
 int main()
 {
+    using namespace icu;
+
     UErrorCode status = U_ZERO_ERROR;
 
+    {
+        std::cout << Locale::getDefault().getBaseName() << std::endl;
+        std::cout << Locale::getRoot().getBaseName() << std::endl;
+    }
     std::cout << "------------------------------" << std::endl;
     {
         std::u16string u16 = u"「あいうえお、かき\r\nくけこ。」";
@@ -173,7 +188,7 @@ int main()
         //std::u16string u16 = u"Abraham \"Bram\" Stoker (8 November 1847 – 20 April 1912) was an Irish author, best known today for his 1897 Gothic novel Dracula. During his lifetime, he was better known as the personal assistant of actor Henry Irving and business manager of the Lyceum Theatre in London, which Irving owned.";
         std::u16string u16 = u"3 May. Bistritz. __Left Munich at 8:35 P. M, on 1st May, arriving at Vienna early next morning; should have arrived at 6:46, but train was an hour late. Buda-Pesth seems a wonderful place, from the glimpse which I got of it from the train and the little I could walk through the streets. I feared to go very far from the station, as we had arrived late and would start as near the correct time as possible.";
 
-        func(u16, 80);
+        func(u16, 2);
     }
     return 0;
 }
