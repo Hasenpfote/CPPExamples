@@ -45,6 +45,9 @@ struct op_add final
 {
     template<typename T>
     static T evaluate(T lhs, T rhs){ return lhs + rhs; }
+
+    template<typename L, typename R>
+    static auto evaluate(L lhs, R rhs){ return lhs + rhs; }
 };
 
 template<typename L, typename R>
@@ -57,7 +60,10 @@ auto operator + (const L& lhs, const R& rhs)
 struct op_subtract final
 {
     template<typename T>
-    static T evaluate(T lhs, T rhs){ return lhs - rhs; }
+    static T evaluate(T lhs, T rhs) { return lhs - rhs; }
+
+    template<typename L, typename R>
+    static auto evaluate(L lhs, R rhs) { return lhs - rhs; }
 };
 
 template<typename L, typename R>
@@ -70,7 +76,10 @@ auto operator - (const L& lhs, const R& rhs)
 struct op_multiply final
 {
     template<typename T>
-    static T evaluate(T lhs, T rhs){ return lhs * rhs; }
+    static T evaluate(T lhs, T rhs) { return lhs * rhs; }
+
+    template<typename L, typename R>
+    static auto evaluate(L lhs, R rhs) { return lhs * rhs; }
 };
 
 template<typename L, typename R, class = typename std::enable_if<std::is_arithmetic<R>::value>::type>
@@ -89,7 +98,10 @@ expression<scalar<L>, op_multiply, R> operator * (const L& lhs, const R& rhs)
 struct op_divide final
 {
     template<typename T>
-    static T evaluate(T lhs, T rhs){ return lhs / rhs; }
+    static T evaluate(T lhs, T rhs) { return lhs / rhs; }
+
+    template<typename L, typename R>
+    static auto evaluate(L lhs, R rhs) { return lhs / rhs; }
 };
 
 template<typename L, typename T>
