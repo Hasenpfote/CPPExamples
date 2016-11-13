@@ -33,7 +33,7 @@ public:
 
     auto operator [] (std::size_t i) const
     {
-        return Op::apply(l_[i], r_[i]);
+        return Op::evaluate(l_[i], r_[i]);
     }
 private:
     l_ref_type l_;
@@ -43,14 +43,6 @@ private:
 //
 struct op_add final
 {
-public:
-    static std::int8_t apply(std::int8_t l, std::int8_t r){ return evaluate(l, r); }
-    static std::int16_t apply(std::int16_t l, std::int16_t r){ return evaluate(l, r); }
-    static std::int32_t apply(std::int32_t l, std::int32_t r){ return evaluate(l, r); }
-    static float apply(float l, float r){ return evaluate(l, r); }
-    static double apply(double l, double r){ return evaluate(l, r); }
-    static long double apply(long double l, long double r){ return evaluate(l, r); }
-private:
     template<typename T>
     static T evaluate(T lhs, T rhs){ return lhs + rhs; }
 };
@@ -64,16 +56,8 @@ auto operator + (const L& lhs, const R& rhs)
 //
 struct op_subtract final
 {
-public:
-    static std::int8_t apply(std::int8_t l, std::int8_t r){ return evaluate(l, r); }
-    static std::int16_t apply(std::int16_t l, std::int16_t r){ return evaluate(l, r); }
-    static std::int32_t apply(std::int32_t l, std::int32_t r){ return evaluate(l, r); }
-    static float apply(float l, float r){ return evaluate(l, r); }
-    static double apply(double l, double r){ return evaluate(l, r); }
-    static long double apply(long double l, long double r){ return evaluate(l, r); }
-private:
     template<typename T>
-    static T evaluate(T lhs, T rhs) { return lhs - rhs; }
+    static T evaluate(T lhs, T rhs){ return lhs - rhs; }
 };
 
 template<typename L, typename R>
@@ -85,14 +69,6 @@ auto operator - (const L& lhs, const R& rhs)
 //
 struct op_multiply final
 {
-public:
-    static std::int8_t apply(std::int8_t l, std::int8_t r){ return evaluate(l, r); }
-    static std::int16_t apply(std::int16_t l, std::int16_t r){ return evaluate(l, r); }
-    static std::int32_t apply(std::int32_t l, std::int32_t r){ return evaluate(l, r); }
-    static float apply(float l, float r){ return evaluate(l, r); }
-    static double apply(double l, double r){ return evaluate(l, r); }
-    static long double apply(long double l, long double r){ return evaluate(l, r); }
-private:
     template<typename T>
     static T evaluate(T lhs, T rhs){ return lhs * rhs; }
 };
@@ -112,16 +88,8 @@ expression<scalar<L>, op_multiply, R> operator * (const L& lhs, const R& rhs)
 //
 struct op_divide final
 {
-public:
-    static std::int8_t apply(std::int8_t l, std::int8_t r){ return evaluate(l, r); }
-    static std::int16_t apply(std::int16_t l, std::int16_t r){ return evaluate(l, r); }
-    static std::int32_t apply(std::int32_t l, std::int32_t r){ return evaluate(l, r); }
-    static float apply(float l, float r){ return evaluate(l, r); }
-    static double apply(double l, double r){ return evaluate(l, r); }
-    static long double apply(long double l, long double r){ return evaluate(l, r); }
-private:
     template<typename T>
-    static T evaluate(T lhs, T rhs) { return lhs / rhs; }
+    static T evaluate(T lhs, T rhs){ return lhs / rhs; }
 };
 
 template<typename L, typename T>
