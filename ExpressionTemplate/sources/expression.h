@@ -9,20 +9,20 @@ class scalar;
 template<typename E, typename T = void>
 struct expression_traits
 {
-    typename typedef const E& ref_type;
+    typedef const E& ref_type;
 };
 
 template<typename T>
 struct expression_traits<scalar<T>, T>
 {
-    typename typedef scalar<T> ref_type;
+    typedef scalar<T> ref_type;
 };
 
 template<typename L, typename Op, typename R>
 class expression final
 {
-    typename typedef expression_traits<L, typename L::value_type>::ref_type l_ref_type;
-    typename typedef expression_traits<R, typename R::value_type>::ref_type r_ref_type;
+    typedef typename expression_traits<L, typename L::value_type>::ref_type l_ref_type;
+    typedef typename expression_traits<R, typename R::value_type>::ref_type r_ref_type;
 public:
     using value_type = void;
 

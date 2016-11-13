@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <cassert>
+#include <typeinfo>
 #include "vector2.h"
 
 template<typename T>
