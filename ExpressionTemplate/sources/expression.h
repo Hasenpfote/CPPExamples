@@ -104,10 +104,10 @@ struct op_divide final
     static auto evaluate(L lhs, R rhs){ return lhs / rhs; }
 };
 
-template<typename L, typename T>
-auto operator / (const L& lhs, const T& rhs)
+template<typename L, typename R, class = typename std::enable_if<std::is_arithmetic<R>::value>::type>
+auto operator / (const L& lhs, const R& rhs)
 {
-    return expression<L, op_divide, scalar<T>>(lhs, scalar<T>(rhs));
+    return expression<L, op_divide, scalar<R>>(lhs, scalar<R>(rhs));
 }
 
 //
