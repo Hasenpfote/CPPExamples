@@ -2,9 +2,10 @@
 #include <cassert>
 #include <typeinfo>
 #include "vector.h"
+#include "matrix.h"
 
 template<typename T>
-void Test()
+void vector_test()
 {
     using value_type = T;
     using vector = mymath::vector<value_type>;
@@ -65,14 +66,37 @@ void Test()
     }
 }
 
+template<typename T>
+void matrix_test()
+{
+    using value_type = T;
+    using matrix = mymath::matrix<value_type>;
+    std::cout << "=== [Test] matrix<" << typeid(value_type).name() << "> ===" << std::endl;
+    {
+        std::cout << "<< m = 2 * (ma + mb) + (ma - mb) * 3 >>" << std::endl;
+        matrix ma({ static_cast<value_type>(0), static_cast<value_type>(1),
+                    static_cast<value_type>(2), static_cast<value_type>(3) });
+        matrix mb({ static_cast<value_type>(4), static_cast<value_type>(5),
+                    static_cast<value_type>(6), static_cast<value_type>(7) });
+        auto exp = static_cast<value_type>(2) * (ma + mb) + (ma - mb) * static_cast<value_type>(3);
+        matrix m(exp);
+        std::cout << "ma: " << std::endl << ma << std::endl;
+        std::cout << "mb: " << std::endl << mb << std::endl;
+        std::cout << "m : " << std::endl << m  << std::endl;
+        std::cout << std::endl;
+    }
+}
+
 int main()
 {
-    Test<float>();
-    Test<double>();
-    Test<long double>();
-    Test<std::int16_t>();
-    Test<std::int32_t>();
-    Test<std::int64_t>();
+    vector_test<float>();
+    vector_test<double>();
+    vector_test<long double>();
+    vector_test<std::int16_t>();
+    vector_test<std::int32_t>();
+    vector_test<std::int64_t>();
+
+    matrix_test<float>();
 
     return 0;
 }
