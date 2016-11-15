@@ -25,10 +25,8 @@ public:
     using value_type = void;
 
 public:
-    //using l_ref_type = typename expression_traits<L, typename L::value_type>::ref_type;
-    //using r_ref_type = typename expression_traits<R, typename R::value_type>::ref_type;
-    typedef typename expression_traits<L, typename L::value_type>::ref_type l_ref_type;
-    typedef typename expression_traits<R, typename R::value_type>::ref_type r_ref_type;
+    using l_ref_type = typename expression_traits<L, typename L::value_type>::ref_type;
+    using r_ref_type = typename expression_traits<R, typename R::value_type>::ref_type;
 
 public:
     expression(l_ref_type l, r_ref_type r)
