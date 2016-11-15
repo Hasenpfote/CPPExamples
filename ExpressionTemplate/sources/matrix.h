@@ -31,11 +31,11 @@ public:
         array_ = array;
     }
 
-    template<typename Exp>
-    explicit matrix(const Exp& expression)
+    template<typename L, typename Op, typename R>
+    explicit matrix(const expression<L, Op, R>& exp)
     {
         for(size_type i = 0; i < size(); i++)
-            array_[i] = expression[i];
+            array_[i] = exp[i];
     }
 
     type& operator = (const type& other)
@@ -44,22 +44,22 @@ public:
         return *this;
     }
 
-    template<typename Exp>
-    type& operator = (const Exp& expression)
+    template<typename L, typename Op, typename R>
+    type& operator = (const expression<L, Op, R>& exp)
     {
         for(size_type i = 0; i < size(); i++)
-            array_[i] = expression[i];
+            array_[i] = exp[i];
         return *this;
     }
 
     reference operator [] (size_type i){ return array_[i]; }
     value_type operator [] (size_type i) const { return array_[i]; }
 
-    static constexpr size_type index(size_type row, size_type column) { return column * rows() + row; }
     static constexpr size_type order(){ return order_; }
     static constexpr size_type rows(){ return order(); }
     static constexpr size_type columns(){ return order(); }
     static constexpr size_type size(){ return rows() * columns(); }
+    static constexpr size_type index(size_type row, size_type column) { return column * rows() + row; }
 
 private:
     array_type array_;

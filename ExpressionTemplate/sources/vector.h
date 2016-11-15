@@ -31,11 +31,11 @@ public:
         array_ = array;
     }
 
-    template<typename Exp>
-    explicit vector(const Exp& expression)
+    template<typename L, typename Op, typename R>
+    explicit vector(const expression<L, Op, R>& exp)
     {
         for(size_type i = 0; i < size(); i++)
-            array_[i] = expression[i];
+            array_[i] = exp[i];
     }
 
     type& operator = (const type& other)
@@ -44,11 +44,11 @@ public:
         return *this;
     }
 
-    template<typename Exp>
-    type& operator = (const Exp& expression)
+    template<typename L, typename Op, typename R>
+    type& operator = (const expression<L, Op, R>& exp)
     {
         for(size_type i = 0; i < size(); i++)
-            array_[i] = expression[i];
+            array_[i] = exp[i];
         return *this;
     }
 
