@@ -34,7 +34,7 @@ public:
     template<typename Exp>
     explicit vector(const Exp& expression)
     {
-        for(size_type i = 0; i < order(); i++)
+        for(size_type i = 0; i < size(); i++)
             array_[i] = expression[i];
     }
 
@@ -180,9 +180,9 @@ template<typename T>
 std::ostream& operator << (std::ostream& os, const vector<T>& v)
 {
     const auto flags = os.flags();
-    os << "vector{";
-    for(typename vector<T>::size_type i = 0; i < vector<T>::size(); i++){
-        os << v[i] << ", ";
+    os << "vector{" << v[0];
+    for(typename vector<T>::size_type i = 1; i < vector<T>::size(); i++){
+        os << ", " << v[i];
     }
     os << "}";
     os.flags(flags);
