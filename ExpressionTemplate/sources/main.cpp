@@ -4,6 +4,8 @@
 #include "vector.h"
 #include "matrix.h"
 
+// g++: -ftemplate-depth-30
+
 template<typename T>
 void vector_test()
 {
@@ -83,6 +85,19 @@ void matrix_test()
         std::cout << "ma: " << std::endl << ma << std::endl;
         std::cout << "mb: " << std::endl << mb << std::endl;
         std::cout << "m : " << std::endl << m  << std::endl;
+        std::cout << std::endl;
+    }
+    {
+        std::cout << "<< m = (ma + mb) + (ma + mb) + (ma + mb) + (ma + mb) + (ma + mb) + (ma + mb) + (ma + mb) + (ma + mb) >>" << std::endl;
+        matrix ma({ static_cast<value_type>(0), static_cast<value_type>(1),
+            static_cast<value_type>(2), static_cast<value_type>(3) });
+        matrix mb({ static_cast<value_type>(4), static_cast<value_type>(5),
+            static_cast<value_type>(6), static_cast<value_type>(7) });
+        auto exp = (ma + mb) + (ma + mb) + (ma + mb) + (ma + mb) + (ma + mb) + (ma + mb) + (ma + mb) + (ma + mb);
+        matrix m(exp);
+        std::cout << "ma: " << std::endl << ma << std::endl;
+        std::cout << "mb: " << std::endl << mb << std::endl;
+        std::cout << "m : " << std::endl << m << std::endl;
         std::cout << std::endl;
     }
 }
