@@ -69,10 +69,8 @@ private:
 template<typename L, typename Op, typename R>
 class vector_expression : public expression<L, Op, R>
 {
-    using typename expression<L, Op, R>::l_ref_type;
-    using typename expression<L, Op, R>::r_ref_type;
 public:
-    vector_expression(l_ref_type l, r_ref_type r)
+    vector_expression(const L& l, const R& r)
         : expression<L, Op, R>(l, r)
     {}
 };
@@ -135,42 +133,42 @@ auto operator - (const vector<L>& lhs, const vector<R>& rhs)
 
 // s * v_e
 template<typename L, typename R_ExpL, typename R_ExpOp, typename R_ExpR, typename = typename std::enable_if<std::is_arithmetic<L>::value>::type>
-auto operator * (const L& lhs, const vector_expression<R_ExpL, R_ExpOp, R_ExpR>& rhs)
+auto operator * (L lhs, const vector_expression<R_ExpL, R_ExpOp, R_ExpR>& rhs)
 {
     return vector_expression<scalar<L>, op_multiply, vector_expression<R_ExpL, R_ExpOp, R_ExpR>>(scalar<L>(lhs), rhs);
 }
 
 // s * v
 template<typename L, typename R, typename = typename std::enable_if<std::is_arithmetic<L>::value>::type>
-auto operator * (const L& lhs, const vector<R>& rhs)
+auto operator * (L lhs, const vector<R>& rhs)
 {
     return vector_expression<scalar<L>, op_multiply, vector<R>>(scalar<L>(lhs), rhs);
 }
 
 // v_e * s
 template<typename L_ExpL, typename L_ExpOp, typename L_ExpR, typename R, typename = typename std::enable_if<std::is_arithmetic<R>::value>::type>
-auto operator * (const vector_expression<L_ExpL, L_ExpOp, L_ExpR>& lhs, const R& rhs)
+auto operator * (const vector_expression<L_ExpL, L_ExpOp, L_ExpR>& lhs, R rhs)
 {
     return vector_expression<vector_expression<L_ExpL, L_ExpOp, L_ExpR>, op_multiply, scalar<R>>(lhs, scalar<R>(rhs));
 }
 
 // v * s
 template<typename L, typename R, typename = typename std::enable_if<std::is_arithmetic<R>::value>::type>
-auto operator * (const vector<L>& lhs, const R& rhs)
+auto operator * (const vector<L>& lhs, R rhs)
 {
     return vector_expression<vector<L>, op_multiply, scalar<R>>(lhs, scalar<R>(rhs));
 }
 
 // v_e / s
 template<typename L_ExpL, typename L_ExpOp, typename L_ExpR, typename R, typename = typename std::enable_if<std::is_arithmetic<R>::value>::type>
-auto operator / (const vector_expression<L_ExpL, L_ExpOp, L_ExpR>& lhs, const R& rhs)
+auto operator / (const vector_expression<L_ExpL, L_ExpOp, L_ExpR>& lhs, R rhs)
 {
     return vector_expression<vector_expression<L_ExpL, L_ExpOp, L_ExpR>, op_divide, scalar<R>>(lhs, scalar<R>(rhs));
 }
 
 // v / s
 template<typename L, typename R, typename = typename std::enable_if<std::is_arithmetic<R>::value>::type>
-auto operator / (const vector<L>& lhs, const R& rhs)
+auto operator / (const vector<L>& lhs, R rhs)
 {
     return vector_expression<vector<L>, op_divide, scalar<R>>(lhs, scalar<R>(rhs));
 }

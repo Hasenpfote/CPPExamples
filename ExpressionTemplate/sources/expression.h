@@ -9,7 +9,7 @@ class scalar;
 template<typename E, typename T = void>
 struct expression_traits
 {
-    using ref_type = const E&;
+    using ref_type = E;
 };
 
 template<typename T>
@@ -18,18 +18,24 @@ struct expression_traits<scalar<T>, T>
     using ref_type = scalar<T>;
 };
 
+template<template<typename> class A, typename T>
+struct expression_traits<A<T>, T>
+{
+    using ref_type = const A<T>&;
+};
+
 template<typename L, typename Op, typename R>
 class expression
 {
 public:
     using value_type = void;
 
-public:
+private:
     using l_ref_type = typename expression_traits<L, typename L::value_type>::ref_type;
     using r_ref_type = typename expression_traits<R, typename R::value_type>::ref_type;
 
 public:
-    expression(l_ref_type l, r_ref_type r)
+    expression(const L& l, const R& r)
         : l_(l), r_(r)
     {}
 
@@ -124,14 +130,15 @@ public:
     using const_reference = const value_type&;
 
 public:
-    scalar() = default;
-    explicit scalar(const_reference value)
+    explicit scalar(value_type value)
         : value_(value)
     {
     }
 
     value_type operator [] (std::size_t) const { return value_; }
-    const_reference value_;
+
+private:
+    value_type value_;
 };
 
 }
