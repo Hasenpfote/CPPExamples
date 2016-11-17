@@ -21,7 +21,7 @@ public:
     vector() = default;
     ~vector() = default;
 
-    explicit vector(const type& other)
+    vector(const type& other)
     {
         array_ = other.array_;
     }

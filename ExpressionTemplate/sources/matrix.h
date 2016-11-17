@@ -21,7 +21,7 @@ public:
     matrix() = default;
     ~matrix() = default;
 
-    explicit matrix(const type& other)
+    matrix(const type& other)
     {
         array_ = other.array_;
     }
