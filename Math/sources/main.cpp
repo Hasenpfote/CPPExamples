@@ -38,7 +38,7 @@ auto operator * (const matrix<T, M, N, column_major_order>& lhs, const matrix<T,
 
 // row matrix notation and row major order.
 template<typename T, std::size_t M, std::size_t N, std::size_t P,
-         typename = typename std::enable_if<!is_column_matrix<N, P>::value>::type>
+         typename = typename std::enable_if<!is_column_matrix<M, N>::value>::type>
 auto operator * (const matrix<T, M, N, row_major_order>& lhs, const matrix<T, N, P, row_major_order>& rhs)
 {
     std::cout << "row_major_order" << std::endl;
