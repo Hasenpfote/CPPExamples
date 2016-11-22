@@ -204,7 +204,7 @@ constexpr typename matrix<T, M, N, Order>::size_type matrix<T, M, N, Order>::col
 //
 template<typename T, std::size_t M, std::size_t N, typename Order>
 template<std::size_t _M>
-typename std::enable_if<is_square_matrix<_M, N>::value, T>::type matrix<T, M, N, Order>::trace()
+typename std::enable_if<is_square_matrix<_M, N>::value, T>::type matrix<T, M, N, Order>::trace() const
 {
     typename matrix::value_type result = 0;
     for(typename matrix::size_type i = 0; i < M; i++)
@@ -249,6 +249,46 @@ template<typename T, std::size_t M, std::size_t N, typename Order>
 matrix<T, M, N, Order> operator * (const matrix<T, M, N, Order>& lhs, const matrix<T, N, N, Order>& rhs)
 {
     return matrix<T, M, N, Order>(lhs) *= rhs;
+}
+
+// Column matrix notation with column major order.
+template<typename T, std::size_t M, std::size_t N, std::size_t P,
+         typename = typename std::enable_if<(N != P) && !is_row_matrix<N, P>::value>::type>
+auto operator * (const matrix<T, M, N, column_major_order>& lhs, const matrix<T, N, P, column_major_order>& rhs)
+{
+    using type = matrix<T, M, P, column_major_order>;
+    type result;
+    typename type::value_type elem;
+    for(typename type::size_type i = 0; i < P; i++){
+        for(typename type::size_type j = 0; j < M; j++){
+            elem = 0;
+            for(typename type::size_type k = 0; k < N; k++){
+                elem += lhs(j, k) * rhs(k, i);
+            }
+            result(j, i) = elem;
+        }
+    }
+    return result;
+}
+
+// Row matrix notation and row major order.
+template<typename T, std::size_t M, std::size_t N, std::size_t P,
+         typename = typename std::enable_if<(N != P) && !is_column_matrix<M, N>::value>::type>
+auto operator * (const matrix<T, M, N, row_major_order>& lhs, const matrix<T, N, P, row_major_order>& rhs)
+{
+    using type = matrix<T, M, P, row_major_order>;
+    type result;
+    typename type::value_type elem;
+    for(typename type::size_type i = 0; i < M; i++){
+        for(typename type::size_type j = 0; j < P; j++){
+            elem = 0;
+            for(typename type::size_type k = 0; k < N; k++){
+                elem += lhs(i, k) * rhs(k, j);
+            }
+            result(i, j) = elem;
+        }
+    }
+    return result;
 }
 
 // Stream out.

@@ -166,7 +166,7 @@ public:
 
     //
     template<std::size_t _M = M>
-    typename std::enable_if<is_square_matrix<_M, N>::value, T>::type trace();
+    typename std::enable_if<is_square_matrix<_M, N>::value, T>::type trace() const;
 
 private:
     static constexpr size_type index(size_type row, size_type column, detail::column_major_order_tag);
@@ -185,3 +185,4 @@ private:
 }}
 
 #include "impl/matrix_impl.h"
+#include "impl/vector_impl.h"
