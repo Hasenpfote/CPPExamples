@@ -49,7 +49,7 @@ struct is_column_matrix
 };
 
 template<std::size_t M, std::size_t N>
-struct is_column_matrix<M, N, typename std::enable_if<N == 1>::type>
+struct is_column_matrix<M, N, typename std::enable_if<(M > 1) && (N == 1)>::type>
     : std::true_type
 {
 };
@@ -62,7 +62,7 @@ struct is_row_matrix
 };
 
 template<std::size_t M, std::size_t N>
-struct is_row_matrix<M, N, typename std::enable_if<M == 1>::type>
+struct is_row_matrix<M, N, typename std::enable_if<(M == 1) && (N > 1)>::type>
     : std::true_type
 {
 };
@@ -133,6 +133,16 @@ public:
 
     // Assignment operator.
     type& operator = (const type& other);
+    type& operator += (const type& other);
+    type& operator -= (const type& other);
+    type& operator *= (value_type scalar);
+    type& operator /= (value_type divisor);
+
+    template<typename _Order = Order>
+    typename std::enable_if<std::is_same<_Order, column_major_order>::value, matrix<T, M, N, Order>>::type& operator *= (const matrix<T, N, N, Order>& other);
+
+    template<typename _Order = Order>
+    typename std::enable_if<std::is_same<_Order, row_major_order>::value, matrix<T, M, N, Order>>::type& operator *= (const matrix<T, N, N, Order>& other);
 
     // Casting operator.
     explicit operator pointer ();
@@ -153,6 +163,10 @@ public:
     static constexpr size_type index(size_type row, size_type column);
     static constexpr size_type row_subscript(size_type index);
     static constexpr size_type column_subscript(size_type index);
+
+    //
+    template<std::size_t _M = M>
+    typename std::enable_if<is_square_matrix<_M, N>::value, T>::type trace();
 
 private:
     static constexpr size_type index(size_type row, size_type column, detail::column_major_order_tag);

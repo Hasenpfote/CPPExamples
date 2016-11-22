@@ -2,6 +2,7 @@
 
 namespace example{ namespace math{
 
+// Ctor and Dtor.
 template<typename T, std::size_t M, std::size_t N, typename Order>
 matrix<T, M, N, Order>::matrix(const type& other)
 {
@@ -14,13 +15,83 @@ matrix<T, M, N, Order>::matrix(const storage_type& storage)
     storage_ = storage;
 }
 
+// Assignment operator.
 template<typename T, std::size_t M, std::size_t N, typename Order>
-typename matrix<T, M, N, Order>::type& matrix<T, M, N, Order>::operator=(const type & other)
+typename matrix<T, M, N, Order>::type& matrix<T, M, N, Order>::operator = (const type & other)
 {
     storage_ = other.storage_;
     return *this;
 }
 
+template<typename T, std::size_t M, std::size_t N, typename Order>
+typename matrix<T, M, N, Order>::type& matrix<T, M, N, Order>::operator += (const type& other)
+{
+    for(typename matrix::size_type i = 0; i < size(); i++)
+        storage_[i] += other[i];
+    return *this;
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+typename matrix<T, M, N, Order>::type& matrix<T, M, N, Order>::operator -= (const type& other)
+{
+    for(typename matrix::size_type i = 0; i < size(); i++)
+        storage_[i] -= other[i];
+    return *this;
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+typename matrix<T, M, N, Order>::type& matrix<T, M, N, Order>::operator *= (value_type scalar)
+{
+    for(typename matrix::size_type i = 0; i < size(); i++)
+        storage_[i] *= scalar;
+    return *this;
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+typename matrix<T, M, N, Order>::type& matrix<T, M, N, Order>::operator /= (value_type divisor)
+{
+    for(typename matrix::size_type i = 0; i < size(); i++)
+        storage_[i] /= divisor;
+    return *this;
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+template<typename _Order>
+typename std::enable_if<std::is_same<_Order, column_major_order>::value, matrix<T, M, N, Order>>::type& matrix<T, M, N, Order>::operator *= (const matrix<T, N, N, Order>& other)
+{
+    matrix temp(*this);
+    typename matrix::value_type elem;
+    for(typename matrix::size_type i = 0; i < N; i++){
+        for(typename matrix::size_type j = 0; j < M; j++){
+            elem = 0;
+            for(typename matrix::size_type k = 0; k < N; k++){
+                elem += temp(j, k) * other(k, i);
+            }
+            (*this)(j,i) = elem;
+        }
+    }
+    return *this;
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+template<typename _Order>
+typename std::enable_if<std::is_same<_Order, row_major_order>::value, matrix<T, M, N, Order>>::type& matrix<T, M, N, Order>::operator *= (const matrix<T, N, N, Order>& other)
+{
+    matrix temp(*this);
+    typename matrix::value_type elem;
+    for(typename matrix::size_type i = 0; i < M; i++){
+        for(typename matrix::size_type j = 0; j < N; j++){
+            elem = 0;
+            for(typename matrix::size_type k = 0; k < N; k++){
+                elem += temp(i, k) * other(k, j);
+            }
+            (*this)(i, j) = elem;
+        }
+    }
+    return *this;
+}
+
+// Casting operator.
 template<typename T, std::size_t M, std::size_t N, typename Order>
 matrix<T, M, N, Order>::operator pointer ()
 {
@@ -33,6 +104,7 @@ matrix<T, M, N, Order>::operator const_pointer () const
     return storage_.data();
 }
 
+// Subscript operator.
 template<typename T, std::size_t M, std::size_t N, typename Order>
 typename matrix<T, M, N, Order>::reference matrix<T, M, N, Order>::operator [] (size_type i)
 {
@@ -129,8 +201,57 @@ constexpr typename matrix<T, M, N, Order>::size_type matrix<T, M, N, Order>::col
     return index % columns();
 }
 
+//
+template<typename T, std::size_t M, std::size_t N, typename Order>
+template<std::size_t _M>
+typename std::enable_if<is_square_matrix<_M, N>::value, T>::type matrix<T, M, N, Order>::trace()
+{
+    typename matrix::value_type result = 0;
+    for(typename matrix::size_type i = 0; i < M; i++)
+        result += (*this)(i, i);
+    return result;
+}
 
-// for debug
+// Unary operator.
+
+// Binary operator.
+template<typename T, std::size_t M, std::size_t N, typename Order>
+auto operator + (const matrix<T, M, N, Order>& lhs, const matrix<T, M, N, Order>& rhs)
+{
+    return matrix<T, M, N, Order>(lhs) += rhs;
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+auto operator - (const matrix<T, M, N, Order>& lhs, const matrix<T, M, N, Order>& rhs)
+{
+    return matrix<T, M, N, Order>(lhs) -= rhs;
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+auto operator * (const matrix<T, M, N, Order>& lhs, typename matrix<T, M, N, Order>::value_type rhs)
+{
+    return matrix<T, M, N, Order>(lhs) *= rhs;
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+auto operator * (typename matrix<T, M, N, Order>::value_type lhs, const matrix<T, M, N, Order>& rhs)
+{
+    return matrix<T, M, N, Order>(rhs) *= lhs;
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+auto operator / (const matrix<T, M, N, Order>& lhs, typename matrix<T, M, N, Order>::value_type rhs)
+{
+    return matrix<T, M, N, Order>(lhs) /= rhs;
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+matrix<T, M, N, Order> operator * (const matrix<T, M, N, Order>& lhs, const matrix<T, N, N, Order>& rhs)
+{
+    return matrix<T, M, N, Order>(lhs) *= rhs;
+}
+
+// Stream out.
 template<typename T, std::size_t M, std::size_t N, typename Order>
 std::ostream& operator << (std::ostream& os, const matrix<T, M, N, Order>& m)
 {
