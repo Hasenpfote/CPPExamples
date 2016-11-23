@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <array>
 #include <iostream>
+#include <cassert>
 
 #define ENABLE_BLOCK_TEST
 #if defined(ENABLE_BLOCK_TEST)
@@ -126,6 +127,7 @@ public:
     using const_pointer = const value_type*;
     using reference = value_type&;
     using const_reference = const value_type&;
+    using storage_order_type = Order;
     using storage_type = std::array<value_type, M * N>;
 
 public:
@@ -175,20 +177,10 @@ public:
 
 #if defined(ENABLE_BLOCK_TEST)
     template<std::size_t P, std::size_t Q>
-    explicit Matrix(const Block<T, P, Q, M, N, Order>& other)
-    {
-    }
+    auto block(size_type row, size_type column);
 
     template<std::size_t P, std::size_t Q>
-    void operator = (const Block<T, P, Q, M, N, Order>& other)
-    {
-    }
-
-    template<std::size_t P, std::size_t Q>
-    Block<T, M, N, P, Q, Order> block(size_type row, size_type column)
-    {
-        return Block<T, M, N, P, Q, Order>(*this, row, column);
-    }
+    auto block(size_type row, size_type column) const;
 #endif
 
 private:
@@ -204,6 +196,22 @@ private:
 private:
     storage_type storage_;
 };
+
+#if defined(ENABLE_BLOCK_TEST)
+template<typename T, std::size_t M, std::size_t N, typename Order>
+template<std::size_t P, std::size_t Q>
+auto Matrix<T, M, N, Order>::block(size_type row, size_type column)
+{
+    return Block<decltype(*this), P, Q>(*this, row, column);
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+template<std::size_t P, std::size_t Q>
+auto Matrix<T, M, N, Order>::block(size_type row, size_type column) const
+{
+    return Block<decltype(*this), P, Q>(*this, row, column);
+}
+#endif
 
 }}
 
