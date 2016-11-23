@@ -2,6 +2,11 @@
 #include <array>
 #include <iostream>
 
+#define ENABLE_BLOCK_TEST
+#if defined(ENABLE_BLOCK_TEST)
+#include "block.h"
+#endif
+
 namespace example{ namespace math{
 
 // storage_order_traits
@@ -109,12 +114,12 @@ struct is_scalar<M, N, typename std::enable_if<(M == 1) && (N == 1)>::type>
 {
 };
 
-// matrix
+// Matrix
 template<typename T, std::size_t M, std::size_t N = M, typename Order = column_major_order>
-class matrix final
+class Matrix final
 {
 public:
-    using type = matrix<T, M, N, Order>;
+    using type = Matrix<T, M, N, Order>;
     using value_type = T;
     using size_type = std::size_t;
     using pointer = value_type*;
@@ -125,11 +130,11 @@ public:
 
 public:
     // Ctor and Dtor.
-    matrix() = default;
-    ~matrix() = default;
+    Matrix() = default;
+    ~Matrix() = default;
 
-    matrix(const type& other);
-    explicit matrix(const storage_type& storage);
+    Matrix(const type& other);
+    explicit Matrix(const storage_type& storage);
 
     // Assignment operator.
     type& operator = (const type& other);
@@ -139,10 +144,10 @@ public:
     type& operator /= (value_type divisor);
 
     template<typename _Order = Order>
-    typename std::enable_if<std::is_same<_Order, column_major_order>::value, matrix<T, M, N, Order>>::type& operator *= (const matrix<T, N, N, Order>& other);
+    typename std::enable_if<std::is_same<_Order, column_major_order>::value, Matrix<T, M, N, Order>>::type& operator *= (const Matrix<T, N, N, Order>& other);
 
     template<typename _Order = Order>
-    typename std::enable_if<std::is_same<_Order, row_major_order>::value, matrix<T, M, N, Order>>::type& operator *= (const matrix<T, N, N, Order>& other);
+    typename std::enable_if<std::is_same<_Order, row_major_order>::value, Matrix<T, M, N, Order>>::type& operator *= (const Matrix<T, N, N, Order>& other);
 
     // Casting operator.
     explicit operator pointer ();
@@ -167,6 +172,24 @@ public:
     //
     template<std::size_t _M = M>
     typename std::enable_if<is_square_matrix<_M, N>::value, T>::type trace() const;
+
+#if defined(ENABLE_BLOCK_TEST)
+    template<std::size_t P, std::size_t Q>
+    explicit Matrix(const Block<T, P, Q, M, N, Order>& other)
+    {
+    }
+
+    template<std::size_t P, std::size_t Q>
+    void operator = (const Block<T, P, Q, M, N, Order>& other)
+    {
+    }
+
+    template<std::size_t P, std::size_t Q>
+    Block<T, M, N, P, Q, Order> block(size_type row, size_type column)
+    {
+        return Block<T, M, N, P, Q, Order>(*this, row, column);
+    }
+#endif
 
 private:
     static constexpr size_type index(size_type row, size_type column, detail::column_major_order_tag);
