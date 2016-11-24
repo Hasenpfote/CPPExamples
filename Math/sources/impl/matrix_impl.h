@@ -208,6 +208,10 @@ template<typename T, std::size_t M, std::size_t N, typename Order>
 template<std::size_t P, std::size_t Q>
 auto Matrix<T, M, N, Order>::block(size_type row, size_type column)
 {
+    static_assert(P <= M, "P must be less than or equal to M.");
+    static_assert(Q <= N, "Q must be less than or equal to N.");
+    assert(((row + P) <= M) && ((column + Q) <= N));
+
     return Block<decltype(*this), P, Q>(*this, row, column);
 }
 
@@ -215,6 +219,10 @@ template<typename T, std::size_t M, std::size_t N, typename Order>
 template<std::size_t P, std::size_t Q>
 auto Matrix<T, M, N, Order>::block(size_type row, size_type column) const
 {
+    static_assert(P <= M, "P must be less than or equal to M.");
+    static_assert(Q <= N, "Q must be less than or equal to N.");
+    assert(((row + P) <= M) && ((column + Q) <= N));
+
     return Block<decltype(*this), P, Q>(*this, row, column);
 }
 #endif
