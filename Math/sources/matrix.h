@@ -163,6 +163,9 @@ public:
     value_type operator () (size_type row, size_type column) const;
 
     //
+    static constexpr bool is_column_major_order();
+    static constexpr bool is_row_major_order();
+
     static constexpr size_type rows();
     static constexpr size_type columns();
     static constexpr size_type size();
@@ -171,13 +174,6 @@ public:
     static constexpr size_type row_subscript(size_type index);
     static constexpr size_type column_subscript(size_type index);
 
-    //
-    void zero();
-
-    //
-    template<std::size_t _M = M>
-    typename std::enable_if<is_square_matrix<_M, N>::value, T>::type trace() const;
-
 #if defined(ENABLE_BLOCK_TEST)
     template<std::size_t P, std::size_t Q>
     auto block(size_type row, size_type column);
@@ -185,6 +181,13 @@ public:
     template<std::size_t P, std::size_t Q>
     auto block(size_type row, size_type column) const;
 #endif
+
+    //
+    void zero();
+
+    //
+    template<std::size_t _M = M>
+    typename std::enable_if<is_square_matrix<_M, N>::value, T>::type trace() const;
 
 private:
     static constexpr size_type index(size_type row, size_type column, detail::column_major_order_tag);
@@ -199,22 +202,6 @@ private:
 private:
     storage_type storage_;
 };
-
-#if defined(ENABLE_BLOCK_TEST)
-template<typename T, std::size_t M, std::size_t N, typename Order>
-template<std::size_t P, std::size_t Q>
-auto Matrix<T, M, N, Order>::block(size_type row, size_type column)
-{
-    return Block<decltype(*this), P, Q>(*this, row, column);
-}
-
-template<typename T, std::size_t M, std::size_t N, typename Order>
-template<std::size_t P, std::size_t Q>
-auto Matrix<T, M, N, Order>::block(size_type row, size_type column) const
-{
-    return Block<decltype(*this), P, Q>(*this, row, column);
-}
-#endif
 
 }}
 

@@ -120,6 +120,18 @@ typename Matrix<T, M, N, Order>::value_type Matrix<T, M, N, Order>::operator () 
 }
 
 template<typename T, std::size_t M, std::size_t N, typename Order>
+constexpr bool Matrix<T, M, N, Order>::is_column_major_order()
+{
+    return std::is_same<storage_order_type, column_major_order>::value;
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+constexpr bool Matrix<T, M, N, Order>::is_row_major_order()
+{
+    return std::is_same<storage_order_type, row_major_order>::value;
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
 constexpr typename Matrix<T, M, N, Order>::size_type Matrix<T, M, N, Order>::rows()
 {
     return M;
@@ -190,6 +202,22 @@ constexpr typename Matrix<T, M, N, Order>::size_type Matrix<T, M, N, Order>::col
 {
     return index % columns();
 }
+
+#if defined(ENABLE_BLOCK_TEST)
+template<typename T, std::size_t M, std::size_t N, typename Order>
+template<std::size_t P, std::size_t Q>
+auto Matrix<T, M, N, Order>::block(size_type row, size_type column)
+{
+    return Block<decltype(*this), P, Q>(*this, row, column);
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+template<std::size_t P, std::size_t Q>
+auto Matrix<T, M, N, Order>::block(size_type row, size_type column) const
+{
+    return Block<decltype(*this), P, Q>(*this, row, column);
+}
+#endif
 
 //
 template<typename T, std::size_t M, std::size_t N, typename Order>
