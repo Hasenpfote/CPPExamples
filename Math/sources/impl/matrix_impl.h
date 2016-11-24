@@ -60,16 +60,11 @@ template<typename _Order>
 typename std::enable_if<std::is_same<_Order, column_major_order>::value, Matrix<T, M, N, Order>>::type& Matrix<T, M, N, Order>::operator *= (const Matrix<T, N, N, Order>& other)
 {
     Matrix temp(*this);
-    typename Matrix::value_type elem;
-    for(typename Matrix::size_type i = 0; i < N; i++){
-        for(typename Matrix::size_type j = 0; j < M; j++){
-            elem = 0;
-            for(typename Matrix::size_type k = 0; k < N; k++){
-                elem += temp(j, k) * other(k, i);
-            }
-            (*this)(j,i) = elem;
-        }
-    }
+    zero();
+    for(typename type::size_type i = 0; i < N; i++)
+        for(typename type::size_type j = 0; j < N; j++)
+            for(typename type::size_type k = 0; k < M; k++)
+                (*this)(k, i) += temp(k, j) * other(j, i);
     return *this;
 }
 
@@ -78,16 +73,11 @@ template<typename _Order>
 typename std::enable_if<std::is_same<_Order, row_major_order>::value, Matrix<T, M, N, Order>>::type& Matrix<T, M, N, Order>::operator *= (const Matrix<T, N, N, Order>& other)
 {
     Matrix temp(*this);
-    typename Matrix::value_type elem;
-    for(typename Matrix::size_type i = 0; i < M; i++){
-        for(typename Matrix::size_type j = 0; j < N; j++){
-            elem = 0;
-            for(typename Matrix::size_type k = 0; k < N; k++){
-                elem += temp(i, k) * other(k, j);
-            }
-            (*this)(i, j) = elem;
-        }
-    }
+    zero();
+    for(typename Matrix::size_type i = 0; i < M; i++)
+        for(typename Matrix::size_type j = 0; j < N; j++)
+            for(typename Matrix::size_type k = 0; k < N; k++)
+                (*this)(i, k) += temp(i, j) * other(j, k);
     return *this;
 }
 
@@ -203,6 +193,13 @@ constexpr typename Matrix<T, M, N, Order>::size_type Matrix<T, M, N, Order>::col
 
 //
 template<typename T, std::size_t M, std::size_t N, typename Order>
+void Matrix<T, M, N, Order>::zero()
+{
+    storage_.fill(0);
+}
+
+//
+template<typename T, std::size_t M, std::size_t N, typename Order>
 template<std::size_t _M>
 typename std::enable_if<is_square_matrix<_M, N>::value, T>::type Matrix<T, M, N, Order>::trace() const
 {
@@ -258,16 +255,11 @@ auto operator * (const Matrix<T, M, N, column_major_order>& lhs, const Matrix<T,
 {
     using type = Matrix<T, M, P, column_major_order>;
     type result;
-    typename type::value_type elem;
-    for(typename type::size_type i = 0; i < P; i++){
-        for(typename type::size_type j = 0; j < M; j++){
-            elem = 0;
-            for(typename type::size_type k = 0; k < N; k++){
-                elem += lhs(j, k) * rhs(k, i);
-            }
-            result(j, i) = elem;
-        }
-    }
+    result.zero();
+    for(typename type::size_type i = 0; i < P; i++)
+        for(typename type::size_type j = 0; j < N; j++)
+            for(typename type::size_type k = 0; k < M; k++)
+                result(k, i) += lhs(k, j) * rhs(j, i);
     return result;
 }
 
@@ -278,16 +270,11 @@ auto operator * (const Matrix<T, M, N, row_major_order>& lhs, const Matrix<T, N,
 {
     using type = Matrix<T, M, P, row_major_order>;
     type result;
-    typename type::value_type elem;
-    for(typename type::size_type i = 0; i < M; i++){
-        for(typename type::size_type j = 0; j < P; j++){
-            elem = 0;
-            for(typename type::size_type k = 0; k < N; k++){
-                elem += lhs(i, k) * rhs(k, j);
-            }
-            result(i, j) = elem;
-        }
-    }
+    result.zero();
+    for(typename type::size_type i = 0; i < M; i++)
+        for(typename type::size_type j = 0; j < N; j++)
+            for(typename type::size_type k = 0; k < P; k++)
+                result(i, k) += lhs(i, j) * rhs(j, k);
     return result;
 }
 
