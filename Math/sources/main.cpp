@@ -13,6 +13,10 @@ int main()
     {
         std::cout << "=== column_major_order" << std::endl;
         using Matrix = Matrix<float, 2, 3, column_major_order>;
+        
+        std::cout << "column_major_order? " << Matrix::is_column_major_order() << std::endl;
+        std::cout << "row_major_order? " << Matrix::is_row_major_order() << std::endl;
+
         Matrix m({ 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f});
         for(Matrix::size_type i = 0; i < Matrix::size(); i++){
             auto row = Matrix::row_subscript(i);
@@ -117,8 +121,8 @@ int main()
     }
 #if defined(ENABLE_BLOCK_TEST)
     {
-        using Matrix2 = Matrix<float, 2, 2, column_major_order>;
-        using Matrix3 = Matrix<float, 3, 3, column_major_order>;
+        using Matrix2 = Matrix<float, 2, 2, row_major_order>;
+        using Matrix3 = Matrix<float, 3, 3, row_major_order>;
         Matrix2 m2a({ 1.0f, 2.0f, 3.0f, 4.0f });
         Matrix3 m3a({1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f });
 
