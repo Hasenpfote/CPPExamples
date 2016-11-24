@@ -172,6 +172,9 @@ public:
     static constexpr size_type column_subscript(size_type index);
 
     //
+    void zero();
+
+    //
     template<std::size_t _M = M>
     typename std::enable_if<is_square_matrix<_M, N>::value, T>::type trace() const;
 
