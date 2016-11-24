@@ -2,9 +2,13 @@
 
 namespace example{ namespace math{
 
+struct column_major_order;
+struct row_major_order;
+
 template<typename T, std::size_t M, std::size_t N, typename Order>
 class Matrix;
 
+// Block
 template<typename MatrixRefType, std::size_t Rows, std::size_t Columns>
 class Block final
 {
@@ -19,8 +23,19 @@ public:
     {
     }
 
-    void operator = (const Matrix<matrix_value_type, Rows, Columns, matrix_storage_order_type>& other);
-    operator cast_type () const;
+    // Assignment operator.
+    template<typename Order = matrix_storage_order_type>
+    typename std::enable_if<std::is_same<Order, column_major_order>::value>::type operator = (const Matrix<matrix_value_type, Rows, Columns, matrix_storage_order_type>& other);
+
+    template<typename Order = matrix_storage_order_type>
+    typename std::enable_if<std::is_same<Order, row_major_order>::value>::type operator = (const Matrix<matrix_value_type, Rows, Columns, matrix_storage_order_type>& other);
+
+    // 'Implicit' Casting operator.
+    template<typename T = cast_type, typename Order = matrix_storage_order_type>
+    operator typename std::enable_if<std::is_same<Order, column_major_order>::value, T>::type () const;
+
+    template<typename T = cast_type, typename Order = matrix_storage_order_type>
+    operator typename std::enable_if<std::is_same<Order, row_major_order>::value, T>::type () const;
 
 private:
     MatrixRefType ref_;
@@ -28,22 +43,6 @@ private:
     matrix_size_type column_;
 };
 
-template<typename MatrixRefType, std::size_t Rows, std::size_t Columns>
-void Block<MatrixRefType, Rows, Columns>::operator = (const Matrix<matrix_value_type, Rows, Columns, matrix_storage_order_type>& other)
-{
-    for(matrix_size_type i = 0; i < Rows; i++)
-        for(matrix_size_type j = 0; j < Columns; j++)
-            ref_(row_ + i, column_ + j) = other(i, j);
-}
-
-template<typename MatrixRefType, std::size_t Rows, std::size_t Columns>
-Block<MatrixRefType, Rows, Columns>::operator cast_type () const
-{
-    cast_type result;
-    for(matrix_size_type i = 0; i < Rows; i++)
-        for(matrix_size_type j = 0; j < Columns; j++)
-            result(i, j) = ref_(row_ + i, column_ + j);
-    return result;
-}
-
 }}
+
+#include "impl/block_impl.h"
