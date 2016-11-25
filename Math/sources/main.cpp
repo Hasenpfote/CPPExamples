@@ -140,5 +140,11 @@ int main()
         std::cout << m3a << std::endl;
     }
 #endif
+    {
+        using Matrix2 = Matrix<int, 2, 2, row_major_order>;
+        Matrix2 m2a({ 1, 2, 3, 4 });
+        std::cout << "sq_frobenius_norm: " << m2a.squared_frobenius_norm() << std::endl;
+        std::cout << "frobenius_norm: " << m2a.frobenius_norm() << std::endl;
+    }
     return 0;
 }
