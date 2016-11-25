@@ -1,7 +1,8 @@
 ﻿#pragma once
+#include <cmath>
 #include <array>
-#include <iostream>
 #include <cassert>
+#include <iostream>
 
 #define ENABLE_BLOCK_TEST
 #if defined(ENABLE_BLOCK_TEST)
@@ -184,6 +185,20 @@ public:
 
     //
     void zero();
+
+    // 
+    void negate();
+
+    //
+    value_type squared_frobenius_norm() const;
+
+    //
+    template<typename ValueType = value_type>
+    typename std::enable_if<std::is_floating_point<ValueType>::value, ValueType>::type frobenius_norm() const;
+
+    //
+    template<typename ValueType = value_type>
+    typename std::enable_if<std::is_integral<ValueType>::value, double>::type frobenius_norm() const;
 
     //
     template<std::size_t _M = M>

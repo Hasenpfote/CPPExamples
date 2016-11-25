@@ -26,7 +26,7 @@ typename Matrix<T, M, N, Order>::type& Matrix<T, M, N, Order>::operator = (const
 template<typename T, std::size_t M, std::size_t N, typename Order>
 typename Matrix<T, M, N, Order>::type& Matrix<T, M, N, Order>::operator += (const type& other)
 {
-    for(typename Matrix::size_type i = 0; i < size(); i++)
+    for(size_type i = 0; i < size(); i++)
         storage_[i] += other[i];
     return *this;
 }
@@ -34,7 +34,7 @@ typename Matrix<T, M, N, Order>::type& Matrix<T, M, N, Order>::operator += (cons
 template<typename T, std::size_t M, std::size_t N, typename Order>
 typename Matrix<T, M, N, Order>::type& Matrix<T, M, N, Order>::operator -= (const type& other)
 {
-    for(typename Matrix::size_type i = 0; i < size(); i++)
+    for(size_type i = 0; i < size(); i++)
         storage_[i] -= other[i];
     return *this;
 }
@@ -42,7 +42,7 @@ typename Matrix<T, M, N, Order>::type& Matrix<T, M, N, Order>::operator -= (cons
 template<typename T, std::size_t M, std::size_t N, typename Order>
 typename Matrix<T, M, N, Order>::type& Matrix<T, M, N, Order>::operator *= (value_type scalar)
 {
-    for(typename Matrix::size_type i = 0; i < size(); i++)
+    for(size_type i = 0; i < size(); i++)
         storage_[i] *= scalar;
     return *this;
 }
@@ -50,7 +50,7 @@ typename Matrix<T, M, N, Order>::type& Matrix<T, M, N, Order>::operator *= (valu
 template<typename T, std::size_t M, std::size_t N, typename Order>
 typename Matrix<T, M, N, Order>::type& Matrix<T, M, N, Order>::operator /= (value_type divisor)
 {
-    for(typename Matrix::size_type i = 0; i < size(); i++)
+    for(size_type i = 0; i < size(); i++)
         storage_[i] /= divisor;
     return *this;
 }
@@ -74,9 +74,9 @@ typename std::enable_if<std::is_same<_Order, row_major_order>::value, Matrix<T, 
 {
     Matrix temp(*this);
     zero();
-    for(typename Matrix::size_type i = 0; i < M; i++)
-        for(typename Matrix::size_type j = 0; j < N; j++)
-            for(typename Matrix::size_type k = 0; k < N; k++)
+    for(size_type i = 0; i < M; i++)
+        for(size_type j = 0; j < N; j++)
+            for(size_type k = 0; k < N; k++)
                 (*this)(i, k) += temp(i, j) * other(j, k);
     return *this;
 }
@@ -236,16 +236,61 @@ void Matrix<T, M, N, Order>::zero()
 
 //
 template<typename T, std::size_t M, std::size_t N, typename Order>
+void Matrix<T, M, N, Order>::negate()
+{
+    for(size_type i = 0; i < size(); i++)
+        storage_[i] = -storage_[i];
+}
+
+//
+template<typename T, std::size_t M, std::size_t N, typename Order>
+typename Matrix<T, M, N, Order>::value_type Matrix<T, M, N, Order>::squared_frobenius_norm() const
+{
+    value_type result = 0;
+    for(size_type i = 0; i < size(); i++)
+        result += storage_[i] * storage_[i];
+    return result;
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+template<typename ValueType>
+typename std::enable_if<std::is_floating_point<ValueType>::value, ValueType>::type Matrix<T, M, N, Order>::frobenius_norm() const
+{
+    return std::sqrt(squared_frobenius_norm());
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+template<typename ValueType>
+typename std::enable_if<std::is_integral<ValueType>::value, double>::type Matrix<T, M, N, Order>::frobenius_norm() const
+{
+    return std::sqrt(squared_frobenius_norm());
+}
+
+//
+template<typename T, std::size_t M, std::size_t N, typename Order>
 template<std::size_t _M>
 typename std::enable_if<is_square_matrix<_M, N>::value, T>::type Matrix<T, M, N, Order>::trace() const
 {
-    typename Matrix::value_type result = 0;
-    for(typename Matrix::size_type i = 0; i < M; i++)
+    value_type result = 0;
+    for(size_type i = 0; i < M; i++)
         result += (*this)(i, i);
     return result;
 }
 
 // Unary operator.
+template<typename T, std::size_t M, std::size_t N, typename Order>
+auto operator + (const Matrix<T, M, N, Order>& other)
+{
+    return other;
+}
+
+template<typename T, std::size_t M, std::size_t N, typename Order>
+auto operator - (const Matrix<T, M, N, Order>& other)
+{
+    Matrix<T, M, N, Order> temp(other);
+    temp.negate();
+    return temp;
+}
 
 // Binary operator.
 template<typename T, std::size_t M, std::size_t N, typename Order>
