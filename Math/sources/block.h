@@ -24,11 +24,11 @@ public:
     }
 
     // Assignment operator.
-    template<typename Order = matrix_storage_order_type>
-    typename std::enable_if<std::is_same<Order, column_major_order>::value>::type operator = (const Matrix<matrix_value_type, Rows, Columns, matrix_storage_order_type>& other);
+    template<typename T = matrix_type, typename Order = matrix_storage_order_type>
+    typename std::enable_if<!std::is_const<T>::value && std::is_same<Order, column_major_order>::value>::type operator = (const Matrix<matrix_value_type, Rows, Columns, matrix_storage_order_type>& other);
 
-    template<typename Order = matrix_storage_order_type>
-    typename std::enable_if<std::is_same<Order, row_major_order>::value>::type operator = (const Matrix<matrix_value_type, Rows, Columns, matrix_storage_order_type>& other);
+    template<typename T = matrix_type, typename Order = matrix_storage_order_type>
+    typename std::enable_if<!std::is_const<T>::value && std::is_same<Order, row_major_order>::value>::type operator = (const Matrix<matrix_value_type, Rows, Columns, matrix_storage_order_type>& other);
 
     // 'Implicit' Casting operator.
     template<typename T = cast_type, typename Order = matrix_storage_order_type>

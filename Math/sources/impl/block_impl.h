@@ -3,8 +3,8 @@
 namespace example{ namespace math{
 
 template<typename MatrixRefType, std::size_t Rows, std::size_t Columns>
-template<typename Order>
-typename std::enable_if<std::is_same<Order, column_major_order>::value>::type Block<MatrixRefType, Rows, Columns>::operator = (const Matrix<matrix_value_type, Rows, Columns, matrix_storage_order_type>& other)
+template<typename T, typename Order>
+typename std::enable_if<!std::is_const<T>::value && std::is_same<Order, column_major_order>::value>::type Block<MatrixRefType, Rows, Columns>::operator = (const Matrix<matrix_value_type, Rows, Columns, matrix_storage_order_type>& other)
 {
     for(matrix_size_type i = 0; i < Columns; i++)
         for(matrix_size_type j = 0; j < Rows; j++)
@@ -12,8 +12,8 @@ typename std::enable_if<std::is_same<Order, column_major_order>::value>::type Bl
 }
 
 template<typename MatrixRefType, std::size_t Rows, std::size_t Columns>
-template<typename Order>
-typename std::enable_if<std::is_same<Order, row_major_order>::value>::type Block<MatrixRefType, Rows, Columns>::operator = (const Matrix<matrix_value_type, Rows, Columns, matrix_storage_order_type>& other)
+template<typename T, typename Order>
+typename std::enable_if<!std::is_const<T>::value && std::is_same<Order, row_major_order>::value>::type Block<MatrixRefType, Rows, Columns>::operator = (const Matrix<matrix_value_type, Rows, Columns, matrix_storage_order_type>& other)
 {
     for(matrix_size_type i = 0; i < Rows; i++)
         for(matrix_size_type j = 0; j < Columns; j++)
