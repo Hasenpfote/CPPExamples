@@ -57,6 +57,9 @@ void test_doolittle(const float A[][N])
     int pivot[N];
     int num_inversions;
     auto ret = doolittle_lu_decomposition(N, lu, pivot, &num_inversions);
+    std::cout << std::boolalpha << "Is singular? " << !ret << std::endl;
+    if(!ret)
+        return;
     // PA = LU
     {
         std::cout << "(1) PA = LU" << std::endl;
@@ -154,6 +157,9 @@ void test_crout(const float A[][N])
     int pivot[N];
     int num_inversions;
     auto ret = crout_lu_decomposition(N, lu, pivot, &num_inversions);
+    std::cout << std::boolalpha << "Is singular? " << !ret << std::endl;
+    if(!ret)
+        return;
     // PA = LU
     {
         std::cout << "(1) PA = LU" << std::endl;
