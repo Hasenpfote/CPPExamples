@@ -58,5 +58,19 @@ int main()
     b =  99999.99f;
     compare(a, b, abs_tol, rel_tol);
 
+    // is close to zero.
+    {
+        a = 0.0000000001f;
+        b = 0.0f;
+        std::cout << std::boolalpha << "AreCloseWithinAbsoluteTolerance: " << AreCloseWithinAbsoluteTolerance(a, b, abs_tol) << std::endl;
+        std::cout << std::boolalpha << "AreCloseWithinRelativeTolerance: " << AreCloseWithinRelativeTolerance(a, b, rel_tol) << std::endl;
+        std::cout << std::boolalpha << "IsCloseToZero: " << IsCloseToZero(a, abs_tol) << std::endl;
+    }
+    // is close to one.
+    {
+        a = 1.0000001f;
+        b = 1.0f;
+        std::cout << std::boolalpha << "IsCloseToOne: " << IsApproximatelyEqualTo(a, b, abs_tol, rel_tol) << std::endl;
+    }
     return 0;
 }
