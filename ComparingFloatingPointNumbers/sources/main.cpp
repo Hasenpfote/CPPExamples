@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <bitset>
 #include <cassert>
-#include "fp.h"
+#include "fp_comparison.h"
 
 template<typename T>
 void compare(T a, T b, T abs_tol, T rel_tol)
