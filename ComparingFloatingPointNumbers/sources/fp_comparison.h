@@ -1,4 +1,9 @@
-﻿#pragma once
+﻿/*!
+ * @file fp_comparison.h
+ * @brief Floating point number comparison.
+ * @author Hasenpfote
+ */
+#pragma once
 #include <type_traits>
 #include <limits>
 #include <cmath>
