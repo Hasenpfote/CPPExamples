@@ -27,50 +27,43 @@ void compare(T a, T b, T abs_tol, T rel_tol)
     assert((!eq && lt) ? (!gt && !gte && lte) : true);
 }
 
+template<typename T>
+void compare2(T a, T b, T abs_tol, T rel_tol)
+{
+    auto b1 = AreCloseWithinAbsoluteTolerance(a, b, abs_tol);
+    auto b2 = AreCloseWithinRelativeTolerance(a, b, rel_tol);
+    std::cout << std::scientific << "a=" << a << " , b=" << b << std::endl;
+    std::cout << std::boolalpha << "AreCloseWithinAbsoluteTolerance: " << b1 << std::endl;
+    std::cout << std::boolalpha << "AreCloseWithinRelativeTolerance: " << b2 << std::endl;
+}
+
+void test1()
+{
+    // for float.
+    const float abst = 1e-7f;
+    const float relt = 1e-6f;   // 1e-5f > rel > 1e-6f
+
+    std::cout << "case 1-a" << std::endl;
+    compare2(0.000000f, 0.0000001f, abst, relt);
+    compare2(1.000000f, 1.000001f, abst, relt);
+    compare2(10.00000f, 10.00001f, abst, relt);
+    compare2(100.0000f, 100.0001f, abst, relt);
+    compare2(1000.000f, 1000.001f, abst, relt);
+    compare2(10000.00f, 10000.01f, abst, relt);
+    compare2(100000.0f, 100000.1f, abst, relt);     // x
+
+    std::cout << "case 2-a" << std::endl;
+    compare2(1.000000f, 0.999999f, abst, relt);     // x
+    compare2(10.00000f, 9.999990f, abst, relt);
+    compare2(100.0000f, 99.99990f, abst, relt);
+    compare2(1000.000f, 999.9990f, abst, relt);
+    compare2(10000.00f, 9999.990f, abst, relt);
+    compare2(100000.0f, 99999.90f, abst, relt);     // x
+}
+
 int main()
 {
-    const float abs_tol = 1e-10f;
-    const float rel_tol = std::numeric_limits<float>::epsilon();
-    float a, b;
+    test1();
 
-    a = -1.000000f;
-    b = -1.000001f;
-    compare(a, b, abs_tol, rel_tol);
-    a =  0.000000f;
-    b = -0.000001f;
-    compare(a, b, abs_tol, rel_tol);
-    a =  1.000000f;
-    b =  0.999999f;
-    compare(a, b, abs_tol, rel_tol);
-    a = 10.000000f;
-    b =  9.999999f;
-    compare(a, b, abs_tol, rel_tol);
-    a = 100.00000f;
-    b =  99.99999f;
-    compare(a, b, abs_tol, rel_tol);
-    a = 1000.0000f;
-    b =  999.9999f;
-    compare(a, b, abs_tol, rel_tol);
-    a = 10000.000f;
-    b =  9999.999f;
-    compare(a, b, abs_tol, rel_tol);
-    a = 100000.00f;
-    b =  99999.99f;
-    compare(a, b, abs_tol, rel_tol);
-
-    // is close to zero.
-    {
-        a = 0.0000000001f;
-        b = 0.0f;
-        std::cout << std::boolalpha << "AreCloseWithinAbsoluteTolerance: " << AreCloseWithinAbsoluteTolerance(a, b, abs_tol) << std::endl;
-        std::cout << std::boolalpha << "AreCloseWithinRelativeTolerance: " << AreCloseWithinRelativeTolerance(a, b, rel_tol) << std::endl;
-        std::cout << std::boolalpha << "IsCloseToZero: " << IsCloseToZero(a, abs_tol) << std::endl;
-    }
-    // is close to one.
-    {
-        a = 1.0000001f;
-        b = 1.0f;
-        std::cout << std::boolalpha << "IsCloseToOne: " << IsApproximatelyEqualTo(a, b, abs_tol, rel_tol) << std::endl;
-    }
     return 0;
 }
