@@ -50,3 +50,11 @@ install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin/Debug CONFIGURATIONS Deb
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin/Release CONFIGURATIONS Release)
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin/MinSizeRel CONFIGURATIONS MinSizeRel)
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin/RelWithDebInfo CONFIGURATIONS RelWithDebInfo)
+
+# Tests
+option(CREATE_UNIT_TESTS "If you need an unit tests." ON)
+if(${CREATE_UNIT_TESTS})
+    enable_testing()
+    include(cmake/gtest.cmake)
+    add_subdirectory(test)
+endif()
