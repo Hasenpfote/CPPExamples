@@ -1,3 +1,4 @@
+#include <iterator>
 #include <iostream>
 #include <cstdlib>
 #include <cassert>
@@ -6,6 +7,7 @@
 #include <vector>
 #include <numeric>
 #include <random>
+#include <algorithm>
 
 int solve_quadratic_equation(double a, double b, double c, std::array<double, 2> & roots)
 {
